@@ -14,7 +14,35 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
   build-and-push:
+    needs: quality
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -85,12 +113,16 @@ jobs:
             sudo docker image prune -af --filter "until=24h"
 
             echo "=== Health check ==="
-            sleep 5
-            curl -s -o /dev/null -w "Health check: %{http_code}\n" http://127.0.0.1:3000/ || true
+            # Gating: bounded retries instead of a fixed sleep, and --fail so a
+            # 4xx/5xx or unreachable container fails the deployment.
+            curl --fail --silent --show-error --output /dev/null \
+              --retry 12 --retry-delay 5 --retry-connrefused \
+              http://127.0.0.1:3000/
 
             echo "=== Deploy finished ==="
 
       - name: Verify public URL
         run: |
-          sleep 10
-          curl -s -o /dev/null -w "Public status: %{http_code}\n" https://www.bantugrow.com/
+          curl --fail --silent --show-error --output /dev/null \
+            --retry 12 --retry-delay 5 --retry-connrefused \
+            "${{ vars.PUBLIC_SITE_URL || 'https://bantugrow.id' }}"

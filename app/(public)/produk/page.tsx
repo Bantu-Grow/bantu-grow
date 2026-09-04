@@ -63,17 +63,27 @@ export default async function CatalogPage({ searchParams }: PageProps = {}) {
       </div>
 
       {/* Search */}
-      <div className="relative max-w-md mx-auto mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <form action="/produk" method="get">
+      <div className="max-w-md mx-auto mb-6">
+        <form action="/produk" method="get" role="search" className="flex gap-2">
           {selectedNiche && <input type="hidden" name="niche" value={selectedNiche} />}
-          <input
-            type="text"
-            name="q"
-            defaultValue={searchQuery}
-            placeholder="Cari produk..."
-            className="block w-full rounded-lg border border-input bg-transparent py-2.5 pl-10 pr-4 text-sm placeholder-muted-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary text-foreground"
-          />
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="search"
+              name="q"
+              id="produk-search"
+              defaultValue={searchQuery}
+              placeholder="Cari produk..."
+              aria-label="Cari produk"
+              className="block w-full rounded-lg border border-input bg-transparent py-2.5 pl-10 pr-4 text-sm placeholder-muted-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary text-foreground"
+            />
+          </div>
+          <button
+            type="submit"
+            className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+          >
+            Cari
+          </button>
         </form>
       </div>
 

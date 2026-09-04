@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { RocketIcon, ArrowRightIcon, PhoneCallIcon, Sparkles } from "lucide-react";
+import { ArrowRightIcon, PhoneCallIcon, Sparkles } from "lucide-react";
 import { copy } from "@/content/copy";
 import Link from "next/link";
 
@@ -136,11 +136,11 @@ export function HeroSection() {
 				<Link
 					className={cn(
 						"group mx-auto flex w-fit items-center gap-3 rounded-full border bg-card px-3 py-1 shadow transition-colors hover:bg-muted/50",
-						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out"
+						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out motion-reduce:animate-none motion-reduce:transition-none"
 					)}
 					href="/produk"
 				>
-					<Sparkles className="size-3 text-primary animate-pulse" />
+					<Sparkles className="size-3 text-primary animate-pulse motion-reduce:animate-none" />
 					<span className="text-xs font-medium">Solusi Digital UMKM Indonesia</span>
 					<span className="block h-5 border-l" />
 
@@ -149,18 +149,18 @@ export function HeroSection() {
 
 				<h1
 					className={cn(
-						"fade-in slide-in-from-bottom-10 animate-in text-balance fill-mode-backwards text-center text-4xl tracking-tight font-extrabold delay-100 duration-500 ease-out md:text-5xl lg:text-6xl text-foreground",
+						"fade-in slide-in-from-bottom-10 animate-in text-balance fill-mode-backwards text-center text-4xl tracking-tight font-extrabold delay-100 duration-500 ease-out md:text-5xl lg:text-6xl text-foreground motion-reduce:animate-none",
 						"text-shadow-[0_0px_50px_theme(--color-foreground/.2)]"
 					)}
 				>
 					{copy.heroHeadline}
 				</h1>
 
-				<p className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center text-base text-muted-foreground leading-relaxed delay-200 duration-500 ease-out sm:text-lg">
+				<p className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center text-base text-muted-foreground leading-relaxed delay-200 duration-500 ease-out sm:text-lg motion-reduce:animate-none">
 					{copy.heroDescription}
 				</p>
 
-				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-4 fill-mode-backwards pt-4 delay-300 duration-500 ease-out">
+				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-4 fill-mode-backwards pt-4 delay-300 duration-500 ease-out motion-reduce:animate-none">
 					<Link
 						href="/produk"
 						className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full")}

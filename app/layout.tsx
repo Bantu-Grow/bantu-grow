@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Outfit, Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import { WhatsAppFab } from '@/components/whatsapp-fab'
 import { ThemeProvider } from '@/components/theme-provider'
+import { SITE_URL } from '@/lib/seo'
 
 const outfit = Outfit({
   variable: '--font-outfit',
@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(SITE_URL),
   title: 'BantuGrow — Solusi SaaS untuk UMKM Indonesia',
   description:
     'BantuGrow menyediakan solusi perangkat lunak (SaaS) yang dirancang khusus untuk membantu UMKM Indonesia berkembang lebih cepat, efisien, dan terorganisir.',
@@ -60,10 +60,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          {children}
-          <WhatsAppFab />
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )

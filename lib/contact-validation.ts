@@ -26,7 +26,7 @@ export interface ValidationResult {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const contactSchema = z.object({
+export const contactSchema = z.object({
   name: z.string().min(1, 'required'),
   email: z
     .string()

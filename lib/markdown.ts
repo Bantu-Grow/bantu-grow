@@ -1,12 +1,23 @@
 import { marked } from 'marked'
+import DOMPurify from 'isomorphic-dompurify'
 
 /**
  * Renders markdown string to HTML.
  * Uses the 'marked' library for full markdown support
  * (headings, lists, links, quotes, images, code blocks).
+ *
+ * `marked` does not sanitize, and the result is injected with
+ * dangerouslySetInnerHTML, so any admin-authored (or migrated) content could
+ * otherwise persist script that runs for every visitor. Sanitizing centrally
+ * protects every consumer of this module.
  */
 export function renderMarkdown(markdown: string): string {
-  return marked.parse(markdown, { async: false }) as string
+  const rawHtml = marked.parse(markdown, { async: false }) as string
+  return DOMPurify.sanitize(rawHtml, {
+    USE_PROFILES: { html: true },
+    FORBID_TAGS: ['style', 'form', 'input', 'button'],
+    FORBID_ATTR: ['style', 'srcset', 'formaction', 'form'],
+  })
 }
 
 /**

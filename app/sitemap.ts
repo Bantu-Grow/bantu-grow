@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { getAllProducts } from '@/lib/catalog'
 import { getAllBlogs } from '@/lib/blog'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bantugrow.id'
+import { SITE_URL } from '@/lib/seo'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [

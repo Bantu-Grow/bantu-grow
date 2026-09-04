@@ -5,7 +5,6 @@ import { Portal, PortalBackdrop } from "@/components/portal";
 import { navLinks } from "@/components/layout/Header";
 import { XIcon, MenuIcon } from "lucide-react";
 import Link from 'next/link';
-import { copy } from '@/content/copy';
 
 export function MobileNav() {
 	const [open, setOpen] = React.useState(false);

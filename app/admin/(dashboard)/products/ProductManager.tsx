@@ -17,7 +17,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
   const [showForm, setShowForm] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   
   const [formData, setFormData] = useState<{
     slug: string
@@ -89,7 +89,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       } else {
         alert(res.error || 'Gagal menghapus produk')
       }
-    } catch (err) {
+    } catch {
       alert('Terjadi kesalahan koneksi')
     }
   }
@@ -137,7 +137,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       } else {
         setError(res.error || 'Gagal menyimpan produk')
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan jaringan/server')
     } finally {
       setLoading(false)
@@ -179,7 +179,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in">
+            <div role="alert" className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in">
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -342,7 +342,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                           {product.name}
                         </span>
                         <span className="text-xs text-muted-foreground font-mono">
-                          /{product.slug}
+                          /produk/{product.slug}
                         </span>
                       </div>
                     </td>

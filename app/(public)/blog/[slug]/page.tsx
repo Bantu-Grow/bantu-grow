@@ -42,12 +42,20 @@ function extractHeadings(html: string): { id: string; text: string; level: numbe
 }
 
 function addHeadingIds(html: string): string {
-  return html.replace(/<h([2-3])([^>]*)>(.*?)<\/h([2-3])>/gi, (_match, level, attrs, content, _closeLevel) => {
+  const usedIds = new Map<string, number>()
+
+  return html.replace(/<h([2-3])([^>]*)>(.*?)<\/h([2-3])>/gi, (_match, level, attrs, content) => {
     const text = content.replace(/<[^>]*>/g, '')
-    const id = text
+    const baseId = text
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
+
+    // Headings with identical text would otherwise produce duplicate ids
+    const seen = usedIds.get(baseId) ?? 0
+    usedIds.set(baseId, seen + 1)
+    const id = seen === 0 ? baseId : `${baseId}-${seen + 1}`
+
     return `<h${level}${attrs} id="${id}">${content}</h${level}>`
   })
 }
@@ -94,13 +102,21 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
     <div className="mx-auto w-full max-w-4xl px-4 md:px-8 py-12 md:py-16">
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-8 text-sm text-muted-foreground">
-        <Link href="/blog" className="hover:underline hover:text-foreground transition-colors">
-          Blog
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-foreground font-medium line-clamp-1 inline-block max-w-[250px] md:max-w-[400px] align-bottom">
-          {post.title}
-        </span>
+        <ol className="flex items-center">
+          <li>
+            <Link href="/blog" className="hover:underline hover:text-foreground transition-colors">
+              Blog
+            </Link>
+          </li>
+          <li className="before:mx-2 before:content-['/'] flex items-center">
+            <span
+              aria-current="page"
+              className="text-foreground font-medium line-clamp-1 inline-block max-w-[250px] md:max-w-[400px] align-bottom"
+            >
+              {post.title}
+            </span>
+          </li>
+        </ol>
       </nav>
 
       {/* Back button */}

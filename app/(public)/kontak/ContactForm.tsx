@@ -14,6 +14,7 @@ import { AlertCircle, CheckCircle, RotateCcw } from 'lucide-react'
 interface Props {
   products: Product[]
   preSelectedSlug?: string
+  preFilledMessage?: string
 }
 
 const initialState: SubmitLeadResult | null = null
@@ -34,7 +35,7 @@ async function submitAction(
   return submitLead(input, honeypot)
 }
 
-export function ContactForm({ products, preSelectedSlug }: Props) {
+export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Props) {
   const [state, formAction, isPending] = useActionState(submitAction, initialState)
   const [showForm, setShowForm] = useState(true)
 
@@ -58,7 +59,7 @@ export function ContactForm({ products, preSelectedSlug }: Props) {
         aria-live="polite"
         className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-8 text-center"
       >
-        <CheckCircle className="mx-auto h-12 w-12 text-emerald-500 mb-4 animate-bounce" />
+        <CheckCircle className="mx-auto h-12 w-12 text-emerald-500 mb-4 animate-bounce motion-reduce:animate-none" />
         <h2 className="text-xl font-bold text-foreground mb-2">Pesan Terkirim!</h2>
         <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">{copy.contactSuccessMessage}</p>
         <Button
@@ -187,7 +188,7 @@ export function ContactForm({ products, preSelectedSlug }: Props) {
             id="message"
             name="message"
             placeholder={copy.contactMessagePlaceholder}
-            defaultValue={retained?.message ?? ''}
+            defaultValue={retained?.message ?? preFilledMessage ?? ''}
             rows={5}
             aria-describedby={getError('message') ? 'message-error' : undefined}
             aria-invalid={!!getError('message')}

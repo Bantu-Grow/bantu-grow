@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- test mock intentionally renders a raw img */
 /**
  * Integration tests for SSR delivery and image pipeline.
  * Validates: Requirements 9.3 (SSR primary content) and 8.2 (responsive images)

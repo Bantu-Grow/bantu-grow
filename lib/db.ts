@@ -87,6 +87,12 @@ export async function getDb(): Promise<Database> {
       preferred_time TEXT,
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      token TEXT PRIMARY KEY,
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL
+    );
   `)
 
   // 2. Migration: ensure leads table has id column as PRIMARY KEY
@@ -98,31 +104,46 @@ export async function getDb(): Promise<Database> {
   const hasIdColumn = leadsColumnNames.has('id')
   const hasPhoneColumn = leadsColumnNames.has('phone')
   const hasCompanyNameColumn = leadsColumnNames.has('company_name')
+  let leadsTableRebuilt = false
 
   if (leadsColumns.length > 0 && !hasIdColumn) {
-    await dbInstance.exec(`
-      CREATE TABLE leads_new (
-        id TEXT PRIMARY KEY,
-        received_at TEXT NOT NULL,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        message TEXT NOT NULL,
-        product_slug TEXT,
-        phone TEXT,
-        company_name TEXT
-      );
-      INSERT INTO leads_new (id, received_at, name, email, message, product_slug, phone, company_name)
-        SELECT COALESCE(NULLIF(id, ''), received_at), received_at, name, email, message, product_slug, NULL, NULL FROM leads;
-      DROP TABLE leads;
-      ALTER TABLE leads_new RENAME TO leads;
-    `)
+    // The legacy table has no `id` column, so the generated id is derived from
+    // rowid (stable and unique) instead of selecting a column that doesn't exist.
+    const legacyPhoneSelect = hasPhoneColumn ? 'phone' : 'NULL'
+    const legacyCompanySelect = hasCompanyNameColumn ? 'company_name' : 'NULL'
+
+    try {
+      await dbInstance.exec('BEGIN')
+      await dbInstance.exec(`
+        CREATE TABLE leads_new (
+          id TEXT PRIMARY KEY,
+          received_at TEXT NOT NULL,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          message TEXT NOT NULL,
+          product_slug TEXT,
+          phone TEXT,
+          company_name TEXT
+        );
+        INSERT INTO leads_new (id, received_at, name, email, message, product_slug, phone, company_name)
+          SELECT 'legacy-' || CAST(rowid AS TEXT), received_at, name, email, message, product_slug, ${legacyPhoneSelect}, ${legacyCompanySelect} FROM leads;
+        DROP TABLE leads;
+        ALTER TABLE leads_new RENAME TO leads;
+      `)
+      await dbInstance.exec('COMMIT')
+      leadsTableRebuilt = true
+    } catch (err) {
+      await dbInstance.exec('ROLLBACK')
+      throw err
+    }
   }
 
-  // 2b. Migration: add phone and company_name columns to leads if missing
-  if (!hasPhoneColumn) {
+  // 2b. Migration: add phone and company_name columns to leads if missing.
+  // Skipped when the table was just rebuilt above (it already has both columns).
+  if (!leadsTableRebuilt && !hasPhoneColumn) {
     await dbInstance.exec(`ALTER TABLE leads ADD COLUMN phone TEXT`)
   }
-  if (!hasCompanyNameColumn) {
+  if (!leadsTableRebuilt && !hasCompanyNameColumn) {
     await dbInstance.exec(`ALTER TABLE leads ADD COLUMN company_name TEXT`)
   }
 
@@ -421,6 +442,44 @@ export async function readDemoRequests(): Promise<DemoRequest[]> {
 export async function deleteDemoRequestById(id: string): Promise<void> {
   const db = await getDb()
   await db.run('DELETE FROM demo_requests WHERE id = ?', [id])
+}
+
+// ─── Admin Sessions ────────────────────────────────────────────────────────────
+// Session tokens are persisted so they survive process restarts and are shared
+// across replicas (the previous in-memory Set logged everyone out on redeploy).
+
+export async function createAdminSession(token: string, ttlMs: number): Promise<void> {
+  const db = await getDb()
+  const now = Date.now()
+  await db.run(
+    `INSERT OR REPLACE INTO admin_sessions (token, created_at, expires_at) VALUES (?, ?, ?)`,
+    [token, new Date(now).toISOString(), new Date(now + ttlMs).toISOString()]
+  )
+}
+
+export async function isAdminSessionValid(token: string): Promise<boolean> {
+  const db = await getDb()
+  const row = await db.get<{ expires_at: string }>(
+    'SELECT expires_at FROM admin_sessions WHERE token = ?',
+    [token]
+  )
+  if (!row) return false
+
+  if (new Date(row.expires_at).getTime() <= Date.now()) {
+    await db.run('DELETE FROM admin_sessions WHERE token = ?', [token])
+    return false
+  }
+  return true
+}
+
+export async function deleteAdminSession(token: string): Promise<void> {
+  const db = await getDb()
+  await db.run('DELETE FROM admin_sessions WHERE token = ?', [token])
+}
+
+export async function deleteExpiredAdminSessions(): Promise<void> {
+  const db = await getDb()
+  await db.run('DELETE FROM admin_sessions WHERE expires_at <= ?', [new Date().toISOString()])
 }
 
 // ─── Admin Users (Multi-user structural prep) ──────────────────────────────────

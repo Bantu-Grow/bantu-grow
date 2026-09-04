@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Copy, LinkIcon } from 'lucide-react'
+import { Check, LinkIcon } from 'lucide-react'
 
 interface ShareButtonsProps {
   title: string
@@ -18,12 +18,18 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
   const whatsappUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`
 
-  function handleCopyLink() {
+  async function handleCopyLink() {
     const copyUrl = typeof window !== 'undefined' ? `${window.location.origin}${url}` : url
-    navigator.clipboard.writeText(copyUrl).then(() => {
+    try {
+      // navigator.clipboard is undefined in insecure contexts (plain http),
+      // where the unguarded call rejected and left the button dead.
+      if (!navigator.clipboard) return
+      await navigator.clipboard.writeText(copyUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    })
+    } catch {
+      // Clipboard access can be denied by the browser; fail silently.
+    }
   }
 
   return (

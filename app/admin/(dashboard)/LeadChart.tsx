@@ -59,10 +59,15 @@ export function LeadChart({ dailyLeads, totalLeads, thisWeekCount, lastWeekCount
                   {day.count > 0 ? day.count : ''}
                 </span>
                 <div className="w-full relative flex-1 flex items-end">
-                  <div
-                    className="w-full rounded-t bg-primary/80 transition-all duration-300 min-h-[2px]"
-                    style={{ height: `${Math.max(height, 2)}%` }}
-                  />
+                  {/* A zero-lead day must not draw a bar: a 2px sliver reads as data */}
+                  {day.count > 0 ? (
+                    <div
+                      className="w-full rounded-t bg-primary/80 transition-all duration-300 min-h-[2px]"
+                      style={{ height: `${Math.max(height, 2)}%` }}
+                    />
+                  ) : (
+                    <div className="w-full h-px bg-border" />
+                  )}
                 </div>
                 <span className="text-[10px] text-muted-foreground">
                   {formatShortDate(day.date)}

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { copy } from '@/content/copy'
 import { ArrowRightIcon, PackageX } from 'lucide-react'
 
@@ -22,10 +22,12 @@ export default function ProductNotFound() {
       <p className="text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
         {copy.notFoundProductMessage}
       </p>
-      <Button render={<Link href="/produk" />}>
+      {/* Styled as a button but kept a real link, so it stays announced as a
+          link and does not trigger the Base UI nativeButton warning. */}
+      <Link href="/produk" className={buttonVariants()}>
         {copy.notFoundCatalogLink}
         <ArrowRightIcon className="ml-1.5 h-4 w-4 shrink-0" data-icon="inline-end" />
-      </Button>
+      </Link>
     </div>
   )
 }

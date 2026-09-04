@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { cn } from "@/lib/utils"
 import { GithubIcon } from "@/components/icons/github-icon"
 import { InstagramIcon } from "@/components/icons/instagram-icon"
@@ -22,11 +21,9 @@ const socialIconMap: Record<SocialLink['platform'], React.ReactNode> = {
 
 export function Footer() {
 	const activeSocialLinks = getActiveSocialLinks()
-	const [year, setYear] = useState(2024)
-
-	useEffect(() => {
-		setYear(new Date().getFullYear())
-	}, [])
+	// Computed during render so the server-rendered HTML already carries the
+	// correct year (the previous effect shipped a hardcoded "2024" to users).
+	const year = new Date().getFullYear()
 
 	return (
 		<footer
@@ -62,7 +59,7 @@ export function Footer() {
 				</div>
 
 				<div className="col-span-2 w-full md:col-span-1">
-					<span className="text-foreground font-semibold text-xs uppercase tracking-wider">Navigasi</span>
+					<h2 className="text-foreground font-semibold text-xs uppercase tracking-wider">Navigasi</h2>
 					<nav aria-label="Footer navigasi" className="mt-3 flex flex-col gap-2.5">
 						{navLinks.map(({ href, title }) => (
 							<Link
@@ -77,7 +74,7 @@ export function Footer() {
 				</div>
 
 				<div className="col-span-2 w-full md:col-span-1">
-					<span className="text-foreground font-semibold text-xs uppercase tracking-wider">Legal</span>
+					<h2 className="text-foreground font-semibold text-xs uppercase tracking-wider">Legal</h2>
 					<nav aria-label="Footer legal" className="mt-3 flex flex-col gap-2.5">
 						{legalLinks.map(({ href, title }) => (
 							<Link
@@ -92,7 +89,7 @@ export function Footer() {
 				</div>
 
 				<div className="col-span-2 w-full md:col-span-1">
-					<span className="text-foreground font-semibold text-xs uppercase tracking-wider">Kontak</span>
+					<h2 className="text-foreground font-semibold text-xs uppercase tracking-wider">Kontak</h2>
 					<div className="mt-3 flex flex-col gap-2.5">
 						<a
 							href={`mailto:${copy.contactEmail}`}
@@ -148,6 +145,8 @@ const navLinks = [
 	{ title: copy.navBlog, href: "/blog" },
 	{ title: copy.navAbout, href: "/tentang" },
 	{ title: copy.navContact, href: "/kontak" },
+	{ title: "Studi Kasus", href: "/studi-kasus" },
+	{ title: "Karier", href: "/karier" },
 	{ title: "FAQ", href: "/faq" },
 ]
 

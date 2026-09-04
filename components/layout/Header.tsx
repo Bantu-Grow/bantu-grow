@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/logo"
 import { useScroll } from "@/hooks/use-scroll"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { MobileNav } from "@/components/mobile-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Link from 'next/link'

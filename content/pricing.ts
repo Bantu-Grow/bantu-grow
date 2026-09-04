@@ -25,7 +25,7 @@ export const pricingTiers: PricingTier[] = [
       'Panduan onboarding',
     ],
     cta: 'Mulai Gratis',
-    ctaHref: '/kontak?produk=starter',
+    ctaHref: '/kontak?paket=starter',
   },
   {
     name: 'Growth',
@@ -42,7 +42,7 @@ export const pricingTiers: PricingTier[] = [
       'Multi-user (hingga 5 akun)',
     ],
     cta: 'Pilih Growth',
-    ctaHref: '/kontak?produk=growth',
+    ctaHref: '/kontak?paket=growth',
     highlighted: true,
   },
   {

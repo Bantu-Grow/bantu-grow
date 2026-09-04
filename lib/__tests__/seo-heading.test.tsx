@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import * as fc from 'fast-check'
 import { render } from '@testing-library/react'
 
 // Mock Next.js Link

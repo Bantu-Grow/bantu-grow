@@ -13,7 +13,7 @@ const validEmailArb = fc
     fc.stringMatching(/^[a-zA-Z0-9-]+$/),
     fc.stringMatching(/^[a-zA-Z]{2,6}$/)
   )
-  .filter(([local, domain, tld]) => local.length > 0 && domain.length > 0)
+  .filter(([local, domain]) => local.length > 0 && domain.length > 0)
   .map(([local, domain, tld]) => `${local}@${domain}.${tld}`)
 
 /** Generates strings that are definitely NOT valid emails */

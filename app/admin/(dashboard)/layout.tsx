@@ -2,7 +2,8 @@ import { checkAdminSession, logoutAdmin } from '@/app/actions/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { LayoutDashboard, ShoppingBag, BookOpen, MessageSquare, LogOut, ArrowLeft, Calendar } from 'lucide-react'
+import { AdminNav } from './AdminNav'
+import { LogOut, ArrowLeft } from 'lucide-react'
 import React from 'react'
 
 export default async function AdminDashboardLayout({
@@ -21,14 +22,6 @@ export default async function AdminDashboardLayout({
     redirect('/admin/login')
   }
 
-  const menuItems = [
-    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/products', label: 'Produk', icon: ShoppingBag },
-    { href: '/admin/blogs', label: 'Blog', icon: BookOpen },
-    { href: '/admin/leads', label: 'Pesan Masuk', icon: MessageSquare },
-    { href: '/admin/demo-requests', label: 'Permintaan Demo', icon: Calendar },
-  ]
-
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -45,21 +38,7 @@ export default async function AdminDashboardLayout({
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-4 space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-muted/50 transition-all duration-200"
-                >
-                  <Icon className="h-4.5 w-4.5" />
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
+          <AdminNav />
         </div>
 
         {/* Footer Sidebar */}

@@ -13,13 +13,23 @@ interface BlogManagerProps {
   initialBlogs: BlogPost[]
 }
 
+// Static config: the ref must only be read inside the click handler, never while
+// rendering (accessing a ref during render breaks react-hooks/refs).
+const TOOLBAR_ACTIONS = [
+  { icon: Bold, label: 'Bold', before: '**', after: '**' },
+  { icon: Italic, label: 'Italic', before: '*', after: '*' },
+  { icon: Heading1, label: 'Heading', before: '## ', after: '' },
+  { icon: Link2, label: 'Link', before: '[', after: '](url)' },
+  { icon: List, label: 'List', before: '- ', after: '' },
+] as const
+
 export function BlogManager({ initialBlogs }: BlogManagerProps) {
   const router = useRouter()
   const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogs)
   const [showForm, setShowForm] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const [formData, setFormData] = useState<{
     slug: string
@@ -67,14 +77,6 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
       textarea.setSelectionRange(cursorPos, cursorPos)
     })
   }, [])
-
-  const toolbarActions = [
-    { icon: Bold, label: 'Bold', action: () => insertMarkdown('**', '**') },
-    { icon: Italic, label: 'Italic', action: () => insertMarkdown('*', '*') },
-    { icon: Heading1, label: 'Heading', action: () => insertMarkdown('## ') },
-    { icon: Link2, label: 'Link', action: () => insertMarkdown('[', '](url)') },
-    { icon: List, label: 'List', action: () => insertMarkdown('- ') },
-  ]
 
   const handleOpenAdd = () => {
     setIsNew(true)
@@ -134,7 +136,7 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
       } else {
         alert(res.error || 'Gagal menghapus artikel')
       }
-    } catch (err) {
+    } catch {
       alert('Terjadi kesalahan koneksi')
     }
   }
@@ -190,7 +192,7 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
       } else {
         setError(res.error || 'Gagal menyimpan artikel')
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan jaringan/server')
     } finally {
       setLoading(false)
@@ -232,7 +234,7 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in">
+            <div role="alert" className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in">
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -354,14 +356,15 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
 
               {/* Toolbar */}
               <div className="flex items-center gap-1 border border-border/80 rounded-t-lg bg-muted/30 px-2 py-1.5">
-                {toolbarActions.map((tool) => {
+                {TOOLBAR_ACTIONS.map((tool) => {
                   const Icon = tool.icon
                   return (
                     <button
                       key={tool.label}
                       type="button"
-                      onClick={tool.action}
+                      onClick={() => insertMarkdown(tool.before, tool.after)}
                       title={tool.label}
+                      aria-label={tool.label}
                       className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <Icon className="h-4 w-4" />

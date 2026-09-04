@@ -9,7 +9,13 @@ export interface PageMeta {
 }
 
 const SITE_NAME = 'BantuGrow'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bantugrow.id'
+
+/**
+ * Single canonical site URL for metadata, sitemap and robots.
+ * Previously the root layout used a different variable (NEXT_PUBLIC_APP_URL),
+ * which produced inconsistent canonical/OG URLs.
+ */
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bantugrow.id'
 
 function buildMetadata(title: string, description: string): Metadata {
   return {

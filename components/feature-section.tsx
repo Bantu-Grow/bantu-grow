@@ -72,7 +72,7 @@ export function FeatureSection() {
 				<DashedLine className="right-3 -bottom-[1.5px] left-3" />
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-dashed divide-border/80">
-					{features.map((feature, idx) => (
+					{features.map((feature) => (
 						<div
 							className="group relative p-6 md:p-8 flex flex-col items-start"
 							key={feature.title}

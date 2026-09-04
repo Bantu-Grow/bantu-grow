@@ -9,7 +9,6 @@ import { CallToAction } from '@/components/cta'
 import { DecorIcon } from '@/components/decor-icon'
 import { getAllProducts, buildCatalogView } from '@/lib/catalog'
 import { homeMetadata } from '@/lib/seo'
-import { copy } from '@/content/copy'
 
 export const metadata: Metadata = homeMetadata()
 

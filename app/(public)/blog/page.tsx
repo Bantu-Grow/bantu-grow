@@ -76,19 +76,27 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
       </div>
 
       {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <form action="/blog" method="get">
-          {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
+      <form action="/blog" method="get" role="search" className="flex gap-2">
+        {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
-            type="text"
+            type="search"
             name="q"
+            id="blog-search"
             defaultValue={searchQuery}
             placeholder="Cari artikel..."
+            aria-label="Cari artikel"
             className="block w-full rounded-lg border border-input bg-transparent py-2.5 pl-10 pr-4 text-sm placeholder-muted-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary text-foreground"
           />
-        </form>
-      </div>
+        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+        >
+          Cari
+        </button>
+      </form>
 
       {/* Category filter */}
       <div className="flex flex-wrap gap-2">
@@ -157,7 +165,7 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
                   {post.excerpt}
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-auto">
-                  <span>by</span>
+                  <span>Oleh</span>
                   <span className="font-medium text-foreground/80">{post.author}</span>
                 </div>
               </div>
@@ -168,7 +176,7 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3">
+        <nav aria-label="Navigasi halaman" className="flex items-center justify-center gap-3">
           {safePage > 1 ? (
             <Link
               href={buildUrl({ page: String(safePage - 1) })}
@@ -177,7 +185,10 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
               Sebelumnya
             </Link>
           ) : (
-            <span className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed">
+            <span
+              aria-disabled="true"
+              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed"
+            >
               Sebelumnya
             </span>
           )}
@@ -192,11 +203,14 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
               Berikutnya
             </Link>
           ) : (
-            <span className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed">
+            <span
+              aria-disabled="true"
+              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed"
+            >
               Berikutnya
             </span>
           )}
-        </div>
+        </nav>
       )}
 
       {/* CTA section */}

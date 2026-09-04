@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { deleteDemoRequest } from '@/app/actions/admin'
 import { type DemoRequest } from '@/lib/db'
 import { Button } from '@/components/ui/button'
-import { Trash2, Eye, X, Mail, Clock, Phone, Building2, CalendarDays } from 'lucide-react'
+import { AdminModal } from '../AdminModal'
+import { Trash2, Eye, Mail, Clock, Phone, Building2, CalendarDays } from 'lucide-react'
 
 interface DemoRequestManagerProps {
   initialDemoRequests: DemoRequest[]
@@ -15,10 +16,10 @@ export function DemoRequestManager({ initialDemoRequests }: DemoRequestManagerPr
   const router = useRouter()
   const [requests, setRequests] = useState<DemoRequest[]>(initialDemoRequests)
   const [selectedRequest, setSelectedRequest] = useState<DemoRequest | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent triggering row click (Eye modal)
+    e.stopPropagation()
     if (!window.confirm('Apakah Anda yakin ingin menghapus data permintaan demo ini?')) {
       return
     }
@@ -36,7 +37,7 @@ export function DemoRequestManager({ initialDemoRequests }: DemoRequestManagerPr
       } else {
         alert(res.error || 'Gagal menghapus permintaan demo')
       }
-    } catch (err) {
+    } catch {
       alert('Terjadi kesalahan koneksi')
     }
   }
@@ -72,11 +73,7 @@ export function DemoRequestManager({ initialDemoRequests }: DemoRequestManagerPr
               </thead>
               <tbody className="divide-y divide-border/80 text-sm text-foreground">
                 {requests.map((req) => (
-                  <tr
-                    key={req.id}
-                    onClick={() => setSelectedRequest(req)}
-                    className="hover:bg-muted/20 cursor-pointer transition-colors"
-                  >
+                  <tr key={req.id} className="hover:bg-muted/20 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-bold text-foreground text-sm">
@@ -165,24 +162,35 @@ export function DemoRequestManager({ initialDemoRequests }: DemoRequestManagerPr
         )}
       </div>
 
-      {/* Detail Modal Overlay */}
+      {/* Detail Modal */}
       {selectedRequest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg border border-border/80 bg-card rounded-xl p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-border/80 pb-4 mb-5">
-              <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <CalendarDays className="h-5 w-5 text-primary" />
-                Detail Permintaan Demo
-              </h3>
-              <button
-                type="button"
-                onClick={() => setSelectedRequest(null)}
-                className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+        <AdminModal
+          open={!!selectedRequest}
+          onOpenChange={(open) => {
+            if (!open) setSelectedRequest(null)
+          }}
+          title={
+            <>
+              <CalendarDays className="h-5 w-5 text-primary" aria-hidden="true" />
+              Detail Permintaan Demo
+            </>
+          }
+          footer={
+            <>
+              <Button
+                variant="outline"
+                className="text-destructive border-destructive/20 hover:bg-destructive/5"
+                onClick={(e) => handleDelete(selectedRequest.id, e)}
               >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
+                <Trash2 className="mr-2 h-4 w-4" />
+                Hapus Permintaan
+              </Button>
+              <Button type="button" onClick={() => setSelectedRequest(null)}>
+                Tutup
+              </Button>
+            </>
+          }
+        >
             <div className="space-y-4 text-sm text-foreground">
               <div className="grid grid-cols-3 gap-y-3 gap-x-2 border-b border-border/80 pb-4">
                 <span className="text-muted-foreground font-semibold">Nama Pemohon</span>
@@ -239,22 +247,7 @@ export function DemoRequestManager({ initialDemoRequests }: DemoRequestManagerPr
                 </span>
               </div>
             </div>
-
-            <div className="flex justify-end gap-3 border-t border-border/80 pt-4 mt-6">
-              <Button
-                variant="outline"
-                className="text-destructive border-destructive/20 hover:bg-destructive/5"
-                onClick={(e) => handleDelete(selectedRequest.id, e)}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Hapus Permintaan
-              </Button>
-              <Button type="button" onClick={() => setSelectedRequest(null)}>
-                Tutup
-              </Button>
-            </div>
-          </div>
-        </div>
+        </AdminModal>
       )}
     </div>
   )

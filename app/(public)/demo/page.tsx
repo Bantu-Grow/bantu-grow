@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { DemoForm } from './DemoForm'
 import { DecorIcon } from '@/components/decor-icon'
 import { demoMetadata } from '@/lib/seo'
+import { getAllProducts } from '@/lib/catalog'
 import { CheckCircle } from 'lucide-react'
 
 export const metadata: Metadata = demoMetadata()
@@ -13,7 +14,12 @@ const benefits = [
   'Konsultasi awal untuk solusi terbaik',
 ]
 
-export default function DemoPage() {
+export default async function DemoPage() {
+  // Options are derived from the catalog so the submitted slug always matches a
+  // real product (the hardcoded list had drifted from the actual slugs).
+  const products = await getAllProducts()
+  const productOptions = products.map((p) => ({ slug: p.slug, name: p.name }))
+
   return (
     <div className="mx-auto w-full max-w-5xl px-4 md:px-8 py-12 md:py-16">
       <div className="text-center mb-12">
@@ -58,7 +64,7 @@ export default function DemoPage() {
               <h3 className="text-lg font-bold text-foreground mb-6">
                 Isi Formulir Demo
               </h3>
-              <DemoForm />
+              <DemoForm products={productOptions} />
             </div>
           </div>
         </div>

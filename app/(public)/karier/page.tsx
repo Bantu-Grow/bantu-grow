@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { MapPin, Briefcase, Building2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DecorIcon } from '@/components/decor-icon'

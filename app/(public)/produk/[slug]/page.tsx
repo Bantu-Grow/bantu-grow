@@ -48,11 +48,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
     <div className="mx-auto w-full max-w-4xl px-4 md:px-8 py-12 md:py-16">
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-8 text-sm text-muted-foreground">
-        <Link href="/produk" className="hover:underline hover:text-foreground transition-colors">
-          Produk
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-foreground font-medium">{vm.name}</span>
+        <ol className="flex items-center">
+          <li>
+            <Link href="/produk" className="hover:underline hover:text-foreground transition-colors">
+              Produk
+            </Link>
+          </li>
+          <li className="before:mx-2 before:content-['/']">
+            <span className="text-foreground font-medium" aria-current="page">
+              {vm.name}
+            </span>
+          </li>
+        </ol>
       </nav>
 
       <div className="relative border-y border-border/80 py-12 mb-12">

@@ -11,32 +11,36 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light')
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
+// Read the initial theme during state initialization instead of in an effect.
+// The inline script in app/layout.tsx has already applied the class to <html>,
+// so this only mirrors that decision into React state without cascading renders.
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light'
+  try {
     const savedTheme = localStorage.getItem('color-scheme') as Theme | null
-    if (savedTheme) {
-      setThemeState(savedTheme)
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      setThemeState(prefersDark ? 'dark' : 'light')
-    }
-    setMounted(true)
-  }, [])
+    if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  } catch {
+    return 'light'
+  }
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme)
 
   useEffect(() => {
-    if (!mounted) return
-
     const root = window.document.documentElement
     if (theme === 'dark') {
       root.classList.add('dark')
     } else {
       root.classList.remove('dark')
     }
-    localStorage.setItem('color-scheme', theme)
-  }, [theme, mounted])
+    try {
+      localStorage.setItem('color-scheme', theme)
+    } catch {
+      // Storage can be unavailable (private mode, blocked cookies)
+    }
+  }, [theme])
 
   const setTheme = (t: Theme) => {
     setThemeState(t)

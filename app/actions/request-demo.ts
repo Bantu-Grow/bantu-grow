@@ -81,7 +81,8 @@ export async function requestDemo(
 
   try {
     await insertDemoRequest(demoRequest)
-    console.log('[BantuGrow Demo Request]', JSON.stringify(demoRequest, null, 2))
+    // Avoid logging PII (name, email, phone, company) to server logs
+    console.log('[BantuGrow Demo Request] received', { id: demoRequest.id })
     return { status: 'success' }
   } catch (error) {
     console.error('[BantuGrow] Demo request error:', error)

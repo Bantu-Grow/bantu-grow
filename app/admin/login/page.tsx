@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
       } else {
         setError(res.error || 'Password salah')
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan jaringan')
     } finally {
       setLoading(false)
@@ -53,9 +53,9 @@ export default function AdminLoginPage() {
 
         <div className="flex flex-col items-center justify-center text-center space-y-4">
           <Logo className="h-6" />
-          <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
             Admin Panel Login
-          </h2>
+          </h1>
           <p className="text-sm text-muted-foreground max-w-xs">
             Masukkan password administrator untuk mengelola konten BantuGrow.
           </p>
@@ -63,7 +63,10 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in slide-in-from-top-1">
+            <div
+              role="alert"
+              className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in slide-in-from-top-1"
+            >
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>

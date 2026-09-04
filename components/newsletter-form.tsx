@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 
 export function NewsletterForm() {
   const [email, setEmail] = useState('')
+  const [website, setWebsite] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
@@ -17,7 +18,7 @@ export function NewsletterForm() {
     setStatus('loading')
     try {
       const { subscribeNewsletter } = await import('@/app/actions/subscribe-newsletter')
-      const result = await subscribeNewsletter(email)
+      const result = await subscribeNewsletter(email, website)
       if (result.status === 'success') {
         setStatus('success')
         setMessage('Terima kasih! Anda berhasil berlangganan newsletter kami.')
@@ -32,10 +33,14 @@ export function NewsletterForm() {
     }
   }
 
+  const hasError = status === 'error'
+
   return (
     <div className="w-full">
       {status === 'success' ? (
-        <p className="text-sm text-primary font-medium">{message}</p>
+        <p role="status" className="text-sm text-primary font-medium">
+          {message}
+        </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
           <Input
@@ -46,6 +51,19 @@ export function NewsletterForm() {
             required
             className="flex-grow bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
             aria-label="Alamat email untuk newsletter"
+            aria-invalid={hasError}
+            aria-describedby={hasError ? 'newsletter-error' : undefined}
+          />
+          {/* Honeypot: hidden from users, bots fill it in */}
+          <input
+            type="text"
+            name="website"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="hidden"
           />
           <Button type="submit" disabled={status === 'loading'}>
             {status === 'loading' ? 'Mengirim...' : 'Langganan'}
@@ -53,8 +71,10 @@ export function NewsletterForm() {
           </Button>
         </form>
       )}
-      {status === 'error' && (
-        <p className="mt-2 text-xs text-destructive">{message}</p>
+      {hasError && (
+        <p id="newsletter-error" role="alert" className="mt-2 text-xs text-destructive">
+          {message}
+        </p>
       )}
     </div>
   )

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { deleteLead } from '@/app/actions/admin'
 import { type Lead } from '@/lib/lead-sink'
 import { Button } from '@/components/ui/button'
-import { Trash2, Eye, X, Mail, Clock, ShieldAlert } from 'lucide-react'
+import { AdminModal } from '../AdminModal'
+import { Trash2, Eye, Mail, Clock } from 'lucide-react'
 
 interface LeadManagerProps {
   initialLeads: Lead[]
@@ -15,10 +16,10 @@ export function LeadManager({ initialLeads }: LeadManagerProps) {
   const router = useRouter()
   const [leads, setLeads] = useState<Lead[]>(initialLeads)
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation() // Cegah memicu baris diklik (Eye modal)
+    e.stopPropagation()
     if (!window.confirm('Apakah Anda yakin ingin menghapus data pesan masuk ini?')) {
       return
     }
@@ -36,7 +37,7 @@ export function LeadManager({ initialLeads }: LeadManagerProps) {
       } else {
         alert(res.error || 'Gagal menghapus lead')
       }
-    } catch (err) {
+    } catch {
       alert('Terjadi kesalahan koneksi')
     }
   }
@@ -72,11 +73,7 @@ export function LeadManager({ initialLeads }: LeadManagerProps) {
               </thead>
               <tbody className="divide-y divide-border/80 text-sm text-foreground">
                 {leads.map((lead) => (
-                  <tr
-                    key={lead.id}
-                    onClick={() => setSelectedLead(lead)}
-                    className="hover:bg-muted/20 cursor-pointer transition-colors"
-                  >
+                  <tr key={lead.id} className="hover:bg-muted/20 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-bold text-foreground text-sm">
@@ -146,24 +143,35 @@ export function LeadManager({ initialLeads }: LeadManagerProps) {
         )}
       </div>
 
-      {/* Detail Modal Overlay */}
+      {/* Detail Modal */}
       {selectedLead && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg border border-border/80 bg-card rounded-xl p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-border/80 pb-4 mb-5">
-              <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Mail className="h-5 w-5 text-primary" />
-                Detail Pesan Masuk
-              </h3>
-              <button
-                type="button"
-                onClick={() => setSelectedLead(null)}
-                className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+        <AdminModal
+          open={!!selectedLead}
+          onOpenChange={(open) => {
+            if (!open) setSelectedLead(null)
+          }}
+          title={
+            <>
+              <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
+              Detail Pesan Masuk
+            </>
+          }
+          footer={
+            <>
+              <Button
+                variant="outline"
+                className="text-destructive border-destructive/20 hover:bg-destructive/5"
+                onClick={(e) => handleDelete(selectedLead.id, e)}
               >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
+                <Trash2 className="mr-2 h-4 w-4" />
+                Hapus Pesan
+              </Button>
+              <Button type="button" onClick={() => setSelectedLead(null)}>
+                Tutup
+              </Button>
+            </>
+          }
+        >
             <div className="space-y-4 text-sm text-foreground">
               {/* Sender info */}
               <div className="grid grid-cols-3 gap-2 border-b border-border/80 pb-4">
@@ -207,22 +215,7 @@ export function LeadManager({ initialLeads }: LeadManagerProps) {
                 </p>
               </div>
             </div>
-
-            <div className="flex justify-end gap-3 border-t border-border/80 pt-4 mt-6">
-              <Button
-                variant="outline"
-                className="text-destructive border-destructive/20 hover:bg-destructive/5"
-                onClick={(e) => handleDelete(selectedLead.id, e)}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Hapus Pesan
-              </Button>
-              <Button type="button" onClick={() => setSelectedLead(null)}>
-                Tutup
-              </Button>
-            </div>
-          </div>
-        </div>
+        </AdminModal>
       )}
     </div>
   )

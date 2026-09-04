@@ -6,11 +6,46 @@ export type SubscribeResult =
   | { status: 'success' }
   | { status: 'error'; message: string }
 
-export async function subscribeNewsletter(email: string): Promise<SubscribeResult> {
+// Simple in-memory rate limiting: max 3 subscriptions per 60 seconds per email,
+// mirroring the protection already used by the lead and demo actions.
+const RATE_LIMIT_WINDOW_MS = 60_000
+const RATE_LIMIT_MAX = 3
+const rateLimitMap = new Map<string, number[]>()
+
+function isRateLimited(sessionKey: string): boolean {
+  const now = Date.now()
+  const timestamps = rateLimitMap.get(sessionKey) ?? []
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
+  rateLimitMap.set(sessionKey, recent)
+
+  if (recent.length >= RATE_LIMIT_MAX) {
+    return true
+  }
+  recent.push(now)
+  rateLimitMap.set(sessionKey, recent)
+  return false
+}
+
+export async function subscribeNewsletter(
+  email: string,
+  honeypot: string = ''
+): Promise<SubscribeResult> {
+  // Honeypot check: bots fill hidden fields, humans never see them.
+  if (honeypot) {
+    return { status: 'success' }
+  }
+
   // Basic email validation
   const trimmed = email.trim().toLowerCase()
   if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
     return { status: 'error', message: 'Format email tidak valid.' }
+  }
+
+  if (isRateLimited(trimmed)) {
+    return {
+      status: 'error',
+      message: 'Terlalu banyak percobaan. Silakan coba lagi dalam beberapa saat.',
+    }
   }
 
   try {

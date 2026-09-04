@@ -5,7 +5,12 @@ import { requestDemo, type DemoRequestInput } from '@/app/actions/request-demo'
 import { Button } from '@/components/ui/button'
 import { Check, Loader2, AlertCircle } from 'lucide-react'
 
-export function DemoForm() {
+export interface DemoProductOption {
+  slug: string
+  name: string
+}
+
+export function DemoForm({ products = [] }: { products?: DemoProductOption[] }) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -70,7 +75,10 @@ export function DemoForm() {
       />
 
       {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in">
+        <div
+          role="alert"
+          className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive animate-in fade-in"
+        >
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -146,9 +154,11 @@ export function DemoForm() {
             className="block w-full rounded-lg border border-input bg-transparent py-2.5 px-3 text-sm outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary text-foreground"
           >
             <option value="">Pilih produk...</option>
-            <option value="mutabaah-digital">Mutaba&apos;ah Digital</option>
-            <option value="travel-umroh">Management Travel Umroh</option>
-            <option value="pos">Point of Sale (POS)</option>
+            {products.map((product) => (
+              <option key={product.slug} value={product.slug}>
+                {product.name}
+              </option>
+            ))}
             <option value="semua">Semua Produk</option>
           </select>
         </div>
