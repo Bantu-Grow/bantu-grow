@@ -1,22 +1,24 @@
 services:
-  bantugrow:
-    image: ghcr.io/agoesset/bantu-grow:latest
-    container_name: bantugrow-app
-    ports:
-      - "3000:3000"
-    volumes:
-      - bantugrow-data:/data
+  app:
+    image: ghcr.io/bantu-grow/bantu-grow:latest
+    container_name: bantugrowcom-app
+    expose:
+      - "3000"
+    networks:
+      - proxy
     env_file:
       - .env
     environment:
       - DATABASE_PATH=/data/bantugrow.db
+    volumes:
+      - app_data:/data
     restart: always
-    networks:
-      - mutabaah-digital_default
-
-volumes:
-  bantugrow-data:
 
 networks:
-  mutabaah-digital_default:
+  proxy:
+    external: true
+
+volumes:
+  app_data:
+    name: bantugrowcom_app_data
     external: true
