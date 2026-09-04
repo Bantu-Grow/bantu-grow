@@ -16,7 +16,9 @@ export function FullWidthDivider({
 			aria-hidden="true"
 			className={cn(
 				"pointer-events-none absolute h-px bg-border",
-				// full-bleed (default)
+				// full-bleed (default). 100vw includes the scrollbar width, which
+				// overflowed the page by ~17px on classic-scroll browsers; the
+				// global `overflow-x: clip` on <html> (globals.css) trims it.
 				"data-[contained=false]:left-1/2 data-[contained=false]:w-screen data-[contained=false]:-translate-x-1/2",
 				// contained
 				"data-[contained=true]:inset-x-0 data-[contained=true]:w-full",

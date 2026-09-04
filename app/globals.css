@@ -128,6 +128,10 @@
   }
   html {
     @apply font-sans;
+    /* Kill horizontal scroll from full-bleed elements (w-screen dividers,
+       corner decor icons). `clip` avoids creating a scroll container, so
+       position: sticky keeps working. */
+    overflow-x: clip;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
