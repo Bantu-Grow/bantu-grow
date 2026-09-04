@@ -1,5 +1,13 @@
 import { marked } from 'marked'
-import DOMPurify from 'isomorphic-dompurify'
+import { JSDOM } from 'jsdom'
+import createDOMPurify from 'dompurify'
+
+// A single shared jsdom window (hoisted to module scope) backs DOMPurify on the
+// server. isomorphic-dompurify was replaced because it calls an undici API
+// (webidl.util.markAsUncloneable) that does not exist on the Node 20 CI runtime.
+const { window } = new JSDOM('')
+// DOMPurify expects a browser-like Window; jsdom's DOMWindow satisfies it at runtime.
+const DOMPurify = createDOMPurify(window as unknown as Parameters<typeof createDOMPurify>[0])
 
 /**
  * Renders markdown string to HTML.

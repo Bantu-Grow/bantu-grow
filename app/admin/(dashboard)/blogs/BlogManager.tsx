@@ -7,7 +7,7 @@ import { type BlogPost } from '@/content/blogs'
 import { Button } from '@/components/ui/button'
 import { Plus, Pencil, Trash2, X, Check, AlertCircle, Loader2, Eye, EyeOff, Bold, Italic, Heading1, Link2, List } from 'lucide-react'
 import { formatDate } from '@/lib/format-date'
-import { renderMarkdown } from '@/lib/markdown'
+import { renderMarkdown } from '@/lib/markdown.client'
 
 interface BlogManagerProps {
   initialBlogs: BlogPost[]
