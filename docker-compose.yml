@@ -10,6 +10,8 @@ services:
       - .env
     environment:
       - DATABASE_PATH=/data/bantugrow.db
+      # The live domain (used server-side for metadata/sitemap/robots)
+      - NEXT_PUBLIC_SITE_URL=https://www.bantugrow.com
     volumes:
       - app_data:/data
     restart: always
