@@ -2,7 +2,7 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { recordReferralClick, REFERRAL_ATTRIBUTION_DAYS, REFERRAL_COOKIE, VISITOR_COOKIE } from '@/lib/affiliate'
 
-export async function GET(request: Request, context: RouteContext<'/r/[code]'>) {
+export async function GET(request: Request, context: { params: Promise<{ code: string }> }) {
   const { code } = await context.params
   const headerStore = await headers()
   const forwarded = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim()

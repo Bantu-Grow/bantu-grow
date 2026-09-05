@@ -7,7 +7,7 @@ vi.mock('@/lib/affiliate', () => ({ REFERRAL_ATTRIBUTION_DAYS: 90, REFERRAL_COOK
 
 describe('affiliate referral route', () => {
   it('records a click and returns 90-day secure attribution cookies', async () => {
-    const response = await GET(new Request('https://bantugrow.id/r/CODE'), { params: Promise.resolve({ code: 'CODE' }) } as RouteContext<'/r/[code]'>)
+    const response = await GET(new Request('https://bantugrow.id/r/CODE'), { params: Promise.resolve({ code: 'CODE' }) })
     expect(response.status).toBe(307)
     const cookie = response.headers.get('set-cookie') ?? ''
     expect(cookie).toContain(`${REFERRAL_COOKIE}=click-1`)
