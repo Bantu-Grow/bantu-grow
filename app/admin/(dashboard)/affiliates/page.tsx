@@ -1,0 +1,3 @@
+import { listAdminAffiliates } from '@/lib/affiliate'
+import { AdminOperations, affiliateActions } from '../affiliate-operations'
+export default async function AffiliatesPage(){const rows=await listAdminAffiliates();return <AdminOperations title="Affiliate" description="Setujui pendaftaran dan kelola status affiliate." rows={rows} columns={[{key:'name',label:'Nama'},{key:'email',label:'Email'},{key:'referralCode',label:'Kode'},{key:'status',label:'Status'},{key:'clicks',label:'Klik'},{key:'leads',label:'Lead'},{key:'customers',label:'Pelanggan'}]} actions={affiliateActions}/>}

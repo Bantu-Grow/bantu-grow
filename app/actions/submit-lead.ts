@@ -2,6 +2,8 @@
 
 import { validateContact, type ContactInput, type ValidationResult } from '@/lib/contact-validation'
 import { defaultLeadSink, type Lead, type LeadSink } from '@/lib/lead-sink'
+import { cookies } from 'next/headers'
+import { attributeLead } from '@/lib/affiliate'
 
 export type SubmitLeadResult =
   | { status: 'success' }
@@ -83,6 +85,14 @@ export async function submitLead(
 
   try {
     await sink.record(lead)
+    try {
+      const store = await cookies()
+      const clickId = store.get('bg_referral')?.value
+      const visitorId = store.get('bg_visitor')?.value
+      if (clickId && visitorId) await attributeLead({ clickId, visitorId, leadId: lead.id })
+    } catch {
+      // A stale or invalid referral must never prevent the lead from being saved.
+    }
     return { status: 'success' }
   } catch (error) {
     console.error('[BantuGrow] Lead sink error:', error)

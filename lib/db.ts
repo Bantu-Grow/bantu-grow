@@ -5,6 +5,7 @@ import fs from 'fs'
 import { type Product } from '@/content/products'
 import { type BlogPost } from '@/content/blogs'
 import { type Lead } from '@/lib/lead-sink'
+import { migrateAffiliateSchema } from '@/lib/affiliate/schema'
 
 const DATA_DIR = path.join(process.cwd(), 'content/data')
 const PRODUCTS_JSON = path.join(DATA_DIR, 'products.json')
@@ -94,6 +95,9 @@ export async function getDb(): Promise<Database> {
       expires_at TEXT NOT NULL
     );
   `)
+
+  // Affiliate migrations are idempotent and share this initialized connection.
+  await migrateAffiliateSchema(dbInstance)
 
   // 2. Migration: ensure leads table has id column as PRIMARY KEY
   // Clean up any orphaned leads_new from a previous failed migration

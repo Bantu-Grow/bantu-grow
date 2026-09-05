@@ -1,6 +1,8 @@
 'use server'
 
 import { insertDemoRequest, type DemoRequest } from '@/lib/db'
+import { cookies } from 'next/headers'
+import { attributeLead } from '@/lib/affiliate'
 
 export interface DemoRequestInput {
   name: string
@@ -81,6 +83,14 @@ export async function requestDemo(
 
   try {
     await insertDemoRequest(demoRequest)
+    try {
+      const store = await cookies()
+      const clickId = store.get('bg_referral')?.value
+      const visitorId = store.get('bg_visitor')?.value
+      if (clickId && visitorId) await attributeLead({ clickId, visitorId, demoRequestId: demoRequest.id })
+    } catch {
+      // A stale or invalid referral must never prevent the demo request from saving.
+    }
     // Avoid logging PII (name, email, phone, company) to server logs
     console.log('[BantuGrow Demo Request] received', { id: demoRequest.id })
     return { status: 'success' }

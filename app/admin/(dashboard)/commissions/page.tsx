@@ -1,0 +1,3 @@
+import { listAdminCommissions } from '@/lib/affiliate'
+import { AdminOperations,commissionActions,releaseAction } from '../affiliate-operations'
+export default async function CommissionsPage(){const rows=await listAdminCommissions();return <AdminOperations title="Komisi" description="Tinjau ledger komisi recurring, lepaskan hold, atau void dengan alasan." rows={rows} columns={[{key:'affiliateName',label:'Affiliate'},{key:'customerName',label:'Pelanggan'},{key:'invoiceNumber',label:'Invoice'},{key:'amount',label:'Komisi',format:'money'},{key:'rateBasisPoints',label:'BPS'},{key:'status',label:'Status'},{key:'holdUntil',label:'Hold sampai',format:'date'}]} actions={[...commissionActions]} create={releaseAction}/>}

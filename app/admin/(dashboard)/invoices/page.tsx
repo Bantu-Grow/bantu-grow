@@ -1,0 +1,3 @@
+import { listAdminInvoices,listAdminSubscriptions } from '@/lib/affiliate'
+import { AdminOperations,invoiceActions,invoiceCreate } from '../affiliate-operations'
+export default async function InvoicesPage(){const [rows,subscriptions]=await Promise.all([listAdminInvoices(),listAdminSubscriptions()]);return <AdminOperations title="Invoice" description="Buat, kirim lewat email, void, dan konfirmasi pembayaran invoice." rows={rows} columns={[{key:'invoiceNumber',label:'Nomor'},{key:'customerName',label:'Pelanggan'},{key:'amount',label:'Jumlah',format:'money'},{key:'cycleNumber',label:'Siklus'},{key:'status',label:'Status'},{key:'dueAt',label:'Jatuh tempo',format:'date'}]} actions={invoiceActions} create={invoiceCreate(subscriptions)}/>}

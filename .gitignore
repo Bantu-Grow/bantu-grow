@@ -43,3 +43,6 @@ next-env.d.ts
 # database
 *.db
 content/data/*.db
+*.db-shm
+*.db-wal
+content/data/backups/

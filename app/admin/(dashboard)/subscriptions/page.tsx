@@ -1,0 +1,3 @@
+import { listAdminCustomers,listAdminSubscriptions } from '@/lib/affiliate'
+import { AdminOperations,subscriptionActions,subscriptionCreate } from '../affiliate-operations'
+export default async function SubscriptionsPage(){const [rows,customers]=await Promise.all([listAdminSubscriptions(),listAdminCustomers()]);return <AdminOperations title="Subscription" description="Catat periode layanan pelanggan secara manual." rows={rows} columns={[{key:'customerName',label:'Pelanggan'},{key:'productCode',label:'Produk'},{key:'status',label:'Status'},{key:'periodStart',label:'Mulai',format:'date'},{key:'periodEnd',label:'Berakhir',format:'date'}]} actions={subscriptionActions} create={subscriptionCreate(customers)}/>}

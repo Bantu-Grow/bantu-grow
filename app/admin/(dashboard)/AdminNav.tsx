@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ShoppingBag, BookOpen, MessageSquare, Calendar } from 'lucide-react'
+import { LayoutDashboard, ShoppingBag, BookOpen, MessageSquare, Calendar, Users, UserRound, RefreshCw, ReceiptText, BadgeDollarSign, WalletCards, ChartNoAxesCombined } from 'lucide-react'
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -10,6 +10,13 @@ const menuItems = [
   { href: '/admin/blogs', label: 'Blog', icon: BookOpen },
   { href: '/admin/leads', label: 'Pesan Masuk', icon: MessageSquare },
   { href: '/admin/demo-requests', label: 'Permintaan Demo', icon: Calendar },
+  { href: '/admin/affiliates', label: 'Affiliate', icon: Users },
+  { href: '/admin/customers', label: 'Pelanggan', icon: UserRound },
+  { href: '/admin/subscriptions', label: 'Subscription', icon: RefreshCw },
+  { href: '/admin/invoices', label: 'Invoice', icon: ReceiptText },
+  { href: '/admin/commissions', label: 'Komisi', icon: BadgeDollarSign },
+  { href: '/admin/payouts', label: 'Payout', icon: WalletCards },
+  { href: '/admin/affiliate-analytics', label: 'Analytics Affiliate', icon: ChartNoAxesCombined },
 ]
 
 /**

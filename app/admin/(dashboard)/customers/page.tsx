@@ -1,0 +1,3 @@
+import { listAdminAffiliates,listAdminCustomers } from '@/lib/affiliate'
+import { AdminOperations,customerCreate } from '../affiliate-operations'
+export default async function CustomersPage(){const [rows,affiliates]=await Promise.all([listAdminCustomers(),listAdminAffiliates()]);return <AdminOperations title="Pelanggan" description="Buat pelanggan langsung atau konversikan lead/demo dengan atribusi terkunci." rows={rows} columns={[{key:'name',label:'Nama'},{key:'email',label:'Email'},{key:'affiliateName',label:'Affiliate'},{key:'fraudStatus',label:'Fraud'},{key:'createdAt',label:'Dibuat',format:'date'}]} create={customerCreate(affiliates)}/>}
