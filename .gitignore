@@ -46,3 +46,6 @@ content/data/*.db
 *.db-shm
 *.db-wal
 content/data/backups/
+
+# orb portal metadata
+/.amp/portals/

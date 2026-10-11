@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+repo_root="$PWD"
+TIMEFORMAT='Completed in %3R seconds'
+
+echo 'Checking system prerequisites'
+missing=()
+for package in ca-certificates curl xz-utils python3 make g++; do
+  if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != 'install ok installed' ]]; then
+    missing+=("$package")
+  fi
+done
+if ((${#missing[@]})); then
+  time sudo apt-get update -qq
+  time sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing[@]}"
+fi
+
+node_version="$(cat .nvmrc)"
+node_dir="$HOME/.local/share/bantugrow/node-v$node_version"
+echo "Preparing Node $node_version"
+if [[ ! -x "$node_dir/bin/node" ]]; then
+  case "$(uname -m)" in
+    x86_64) arch=x64 ;;
+    aarch64) arch=arm64 ;;
+    *) echo 'Unsupported Node architecture' >&2; exit 1 ;;
+  esac
+  archive="node-v$node_version-linux-$arch.tar.xz"
+  download="$(mktemp -d)"
+  trap 'rm -rf "$download"' EXIT
+  time curl --fail --silent --show-error --location --retry 3 --max-time 120 \
+    "https://nodejs.org/dist/v$node_version/$archive" -o "$download/$archive"
+  curl --fail --silent --show-error --location --retry 3 --max-time 30 \
+    "https://nodejs.org/dist/v$node_version/SHASUMS256.txt" -o "$download/SHASUMS256.txt"
+  (cd "$download"; grep "  $archive\$" SHASUMS256.txt | sha256sum --check -)
+  mkdir -p "$node_dir"
+  tar -xJf "$download/$archive" -C "$node_dir" --strip-components=1
+fi
+export PATH="$node_dir/bin:$PATH"
+
+# Keep the orb's global Node untouched; agents and services get this repo's pin.
+marker='# BantuGrow orb Node toolchain'
+if ! grep -Fqx "$marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<EOF
+
+$marker
+case "\$PWD/" in
+  "$repo_root/"*)
+    bantugrow_node="\$HOME/.local/share/bantugrow/node-v\$(cat "$repo_root/.nvmrc")/bin"
+    case ":\$PATH:" in
+      *":\$bantugrow_node:"*) ;;
+      *) export PATH="\$bantugrow_node:\$PATH" ;;
+    esac
+    unset bantugrow_node
+    ;;
+esac
+EOF
+fi
+
+node --version
+npm --version
+# npm ci took 17s warm and discards SQLite's ~100s local build on Debian 12.
+# ponytail: cache successful locked installs; manifest/toolchain changes trigger a clean install.
+dependency_key="$({ sha256sum package.json package-lock.json; node --version; npm --version; uname -m; } | sha256sum | cut -d ' ' -f 1)"
+stamp=node_modules/.amp-dependencies
+if [[ ! -f "$stamp" || "$(cat "$stamp")" != "$dependency_key" ]]; then
+  echo 'Installing locked dependencies (including development tools)'
+  time npm ci --include=dev --prefer-offline --no-audit --no-fund
+  if ! node -e 'require("sqlite3")' 2>/dev/null; then
+    echo 'Building SQLite for this orb (the prebuilt binary may require a newer GLIBC)'
+    time npm rebuild sqlite3 --build-from-source
+  fi
+else
+  echo 'Reusing dependencies from the successful locked install'
+fi
+
+# SQLite creates and seeds itself on first use; no daemon or credentials needed.
+echo 'Checking native SQLite and Markdown dependencies'
+time node <<'NODE'
+const assert = require('node:assert/strict');
+const db = new (require('sqlite3').Database)(':memory:');
+db.get('SELECT 6 * 7 AS answer', (error, row) => {
+  assert.ifError(error);
+  assert.equal(row.answer, 42);
+  db.close();
+});
+new (require('jsdom').JSDOM)('').window.close();
+NODE
+printf '%s\n' "$dependency_key" > "$stamp"
+echo 'Orb setup ready'

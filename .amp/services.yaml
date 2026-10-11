@@ -1,0 +1,10 @@
+services:
+  web:
+    command: npm run dev -- --hostname 0.0.0.0 --port "$PORT"
+    env:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    health: /blog
+    portal:
+      title: BantuGrow
+      description: Development preview; SQLite is created and seeded automatically on first use.

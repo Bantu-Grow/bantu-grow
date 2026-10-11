@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ponytail: SQLite is file-backed; add reconnect work only if external services are introduced.
+echo 'No runtime authentication or service repair required'

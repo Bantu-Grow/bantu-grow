@@ -23,6 +23,19 @@ npm run dev
 
 Aplikasi berjalan di http://localhost:3000.
 
+## Amp Orbs
+
+`.agents/setup` installs the Node version pinned in `.nvmrc`, native build tools, and locked npm dependencies (including development tools). Successful installs are reused from the orb snapshot until `package.json`, `package-lock.json`, Node, npm, or the CPU architecture changes. If SQLite's prebuilt binary cannot load on Debian, setup compiles it locally and checks an in-memory query.
+
+The pinned Node is activated for this repository in fresh login shells, including supervised services; the orb's global Node is left untouched. `.agents/resume` does not reinstall anything: SQLite is file-backed and needs no daemon or authentication. No credentials or environment files are generated; configure optional integrations through Amp secrets/environment variables.
+
+```bash
+.agents/setup             # Safe to rerun; reuses matching dependencies
+amp orb services ensure   # Starts the dev server and prints its authenticated portal URL
+```
+
+The dev server is declared in `.amp/services.yaml`, with `/blog` as its readiness check. SQLite creates and seeds itself on first use. Generated portal metadata is ignored by Git. To force a clean dependency install, remove `node_modules/.amp-dependencies` and rerun setup. Future orbs receive this configuration once it is on the project's default branch.
+
 ## Scripts
 
 | Perintah | Keterangan |
