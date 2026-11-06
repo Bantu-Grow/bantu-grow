@@ -209,7 +209,7 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
 
         {/* Body content - rendered markdown */}
         <div
-          className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed"
+          className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       </article>
