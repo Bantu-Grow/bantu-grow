@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Mail, ArrowRight, Users, Package, Headphones, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,28 +11,18 @@ export const metadata: Metadata = aboutMetadata()
 
 const teamMembers = [
   {
-    name: 'Ahmad Rizki',
-    role: 'CEO & Co-Founder',
-    avatar: 'AR',
-    description: 'Berpengalaman 10+ tahun di industri teknologi dan memiliki passion untuk memberdayakan UMKM Indonesia.',
+    name: 'Rayhan Adib Masrukhan',
+    role: 'Founder',
+    avatar: 'RA',
+    description: 'Memimpin visi, arah produk, dan pertumbuhan BantuGrow.',
+    photo: '/images/team/rayhan-adib-masrukhan.jpg',
   },
   {
-    name: 'Siti Nurhaliza',
-    role: 'CTO & Co-Founder',
-    avatar: 'SN',
-    description: 'Ex-engineer di startup unicorn, ahli dalam membangun sistem scalable untuk pasar Indonesia.',
-  },
-  {
-    name: 'Budi Santoso',
-    role: 'Head of Product',
-    avatar: 'BS',
-    description: 'Fokus pada user experience yang sederhana dan berdampak langsung pada operasional bisnis UMKM.',
-  },
-  {
-    name: 'Dewi Anggraini',
-    role: 'Head of Customer Success',
-    avatar: 'DA',
-    description: 'Memastikan setiap pelanggan UMKM mendapatkan nilai maksimal dari produk BantuGrow.',
+    name: 'Agus Setiawan',
+    role: 'Co-Founder',
+    avatar: 'AS',
+    description: 'Mendukung pengembangan produk dan operasional BantuGrow.',
+    photo: '/images/team/agus-setiawan.jpg',
   },
 ]
 
@@ -134,15 +125,25 @@ export default function AboutPage() {
             Orang-orang di balik BantuGrow yang berdedikasi membantu UMKM Indonesia bertumbuh.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {teamMembers.map((member) => (
             <div
               key={member.name}
               className="flex flex-col items-center text-center rounded-lg border border-border/80 p-6 bg-card"
             >
-              <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
-                <span className="text-lg font-bold text-primary">{member.avatar}</span>
-              </div>
+              {member.photo ? (
+                <Image
+                  src={member.photo}
+                  alt={`Foto ${member.name}`}
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-full object-cover border border-primary/20 mb-4"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
+                  <span className="text-lg font-bold text-primary">{member.avatar}</span>
+                </div>
+              )}
               <h3 className="text-sm font-bold text-foreground">{member.name}</h3>
               <p className="text-xs text-primary font-medium mt-0.5 mb-2">{member.role}</p>
               <p className="text-xs text-muted-foreground leading-relaxed">{member.description}</p>
