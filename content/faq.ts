@@ -17,7 +17,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Berapa biaya berlangganan BantuGrow?',
     answer:
-      'BantuGrow menawarkan paket mulai dari gratis (Starter) hingga paket berbayar yang disesuaikan dengan skala bisnis Anda. Tidak ada biaya tersembunyi. Anda bisa melihat detail lengkap di halaman Harga kami.',
+      'BantuGrow menawarkan paket mulai dari gratis (Starter) hingga paket berbayar yang disesuaikan dengan skala bisnis Anda. Tidak ada biaya tersembunyi. Hubungi tim BantuGrow melalui halaman Kontak untuk informasi paket yang sesuai kebutuhan Anda.',
   },
   {
     question: 'Apakah data bisnis saya aman di BantuGrow?',

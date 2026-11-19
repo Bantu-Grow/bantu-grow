@@ -86,7 +86,6 @@ export const copy = {
   // Navigation
   navHome: 'Beranda',
   navProducts: 'Produk',
-  navPricing: 'Harga',
   navBlog: 'Blog',
   navAbout: 'Tentang',
   navContact: 'Kontak',

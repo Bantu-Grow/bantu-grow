@@ -60,7 +60,7 @@ The dev server is declared in `.amp/services.yaml`, with `/blog` as its readines
 
 ```
 app/
-  (public)/   Halaman publik: beranda, produk, harga, blog, studi kasus, demo, kontak, dll.
+  (public)/   Halaman publik: beranda, produk, blog, studi kasus, demo, kontak, dll.
   admin/      Login dan dashboard admin
   actions/    Server Actions (lead, demo, newsletter, admin)
 components/   Komponen UI dan layout

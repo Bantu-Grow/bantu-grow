@@ -126,12 +126,6 @@ export function blogPostMetadata(post: BlogPost): Metadata {
   return buildMetadata(meta.title, meta.description)
 }
 
-export function pricingMeta(): Metadata {
-  const title = `Harga & Paket — ${SITE_NAME}`
-  const description = 'Pilih paket BantuGrow yang sesuai dengan skala bisnis UMKM Anda. Mulai gratis, tanpa biaya tersembunyi.'
-  return buildMetadata(title, description)
-}
-
 export function privacyMetadata(): Metadata {
   return buildMetadata(
     `Kebijakan Privasi — ${SITE_NAME}`,
