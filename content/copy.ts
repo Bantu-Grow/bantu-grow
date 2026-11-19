@@ -5,31 +5,31 @@ export const copy = {
   contactEmail: 'halo@bantugrow.id',
 
   // Hero section (Home page)
-  heroHeadline: 'Tumbuhkan Bisnis UMKM Anda Bersama BantuGrow',
+  heroHeadline: 'Kurangi kerja manual. Fokus tumbuhkan usaha.',
   heroDescription:
-    'BantuGrow menyediakan solusi perangkat lunak (SaaS) yang dirancang khusus untuk membantu usaha mikro, kecil, dan menengah Indonesia berkembang lebih cepat, efisien, dan terorganisir.',
+    'Rapikan transaksi, stok, dan operasional dengan BantuGrow. Pilih solusi sesuai usaha Anda, kurangi pekerjaan berulang, dan fokus mengembangkan bisnis.',
   heroCta: 'Hubungi Kami',
 
   // Value proposition section
-  valuePropHeadline: 'Mengapa Memilih BantuGrow?',
+  valuePropHeadline: 'Usaha tertata. Lebih siap tumbuh.',
   valuePropDescription:
-    'Kami memahami tantangan nyata yang dihadapi UMKM Indonesia. Solusi kami dirancang sederhana, terjangkau, dan langsung berdampak pada operasional bisnis Anda.',
+    'Teknologi seharusnya meringankan pekerjaan Anda. BantuGrow dirancang agar Anda bisa mulai dengan mudah dan mendapat bantuan saat dibutuhkan.',
   valuePropItems: [
     {
-      title: 'Mudah Digunakan',
-      description: 'Antarmuka yang intuitif, tidak perlu keahlian teknis untuk memulai.',
+      title: 'Mulai tanpa ribet',
+      description: 'Antarmuka mudah dipahami, meski Anda belum terbiasa memakai aplikasi bisnis.',
     },
     {
-      title: 'Terjangkau',
-      description: 'Harga yang sesuai dengan skala bisnis UMKM, tanpa biaya tersembunyi.',
+      title: 'Sesuai skala usaha',
+      description: 'Pilih solusi dengan harga yang sesuai kebutuhan dan skala bisnis Anda.',
     },
     {
-      title: 'Dukungan Lokal',
-      description: 'Tim support berbahasa Indonesia siap membantu bisnis Anda 24/7.',
+      title: 'Dibantu tim lokal',
+      description: 'Diskusikan kendala dalam bahasa Indonesia dengan tim yang memahami kebutuhan Anda.',
     },
     {
-      title: 'Khusus UMKM Indonesia',
-      description: 'Dibuat berdasarkan kebutuhan nyata pasar Indonesia, bukan adaptasi dari produk asing.',
+      title: 'Dekat dengan kebutuhan Anda',
+      description: 'Fitur disusun untuk pekerjaan sehari-hari UMKM Indonesia, bukan sekadar daftar fitur panjang.',
     },
   ],
 
@@ -45,9 +45,10 @@ export const copy = {
   contactEmailLabel: 'Email',
 
   // Product catalog page
-  catalogHeadline: 'Produk Kami',
+  catalogHeadline: 'Pilih solusi digital.',
+  catalogHeadlineAccent: 'Rapikan usaha Anda.',
   catalogDescription:
-    'Temukan solusi SaaS BantuGrow yang tepat untuk kebutuhan bisnis Anda. Setiap produk dirancang khusus untuk niche bisnis tertentu.',
+    'Dari transaksi toko hingga pengelolaan jamaah dan amalan komunitas, temukan produk yang membantu pekerjaan Anda lebih tertata.',
 
   // Contact page
   contactHeadline: 'Hubungi Kami',
@@ -95,13 +96,13 @@ export const copy = {
   whatsappCta: 'Chat via WhatsApp',
 
   // Blog
-  blogHeadline: 'Artikel & Wawasan Terbaru',
-  blogDescription: 'Dapatkan tips praktis, panduan digitalisasi, dan kabar terbaru dari tim BantuGrow untuk bisnis Anda.',
+  blogHeadline: 'Ide praktis hari ini. Langkah maju untuk usaha Anda.',
+  blogDescription: 'Temukan panduan digitalisasi, tips operasional, dan wawasan untuk menjalankan usaha dengan lebih tertata.',
   blogReadMore: 'Baca Selengkapnya',
   blogBackToList: 'Kembali ke Blog',
 
   // Footer
   footerDescription:
-    'Solusi SaaS terpercaya untuk UMKM Indonesia. Tumbuh bersama teknologi yang tepat.',
+    'Bantu usaha Anda lebih tertata, dari pekerjaan harian hingga langkah pertumbuhan berikutnya.',
   footerRights: '© 2024 BantuGrow. Semua hak dilindungi.',
 }

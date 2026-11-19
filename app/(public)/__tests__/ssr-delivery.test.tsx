@@ -89,7 +89,7 @@ describe('SSR Delivery – primary content in server-rendered HTML (Req 9.3)', (
     const jsx = await HomePage()
     const html = renderToString(jsx)
     const text = htmlToText(html)
-    expect(text).toContain('Tumbuhkan Bisnis UMKM')
+    expect(text).toContain(copy.heroHeadline)
     expect(text).toContain("Mutaba'ah Digital")
     expect(text).toContain('Management Travel Umroh')
     expect(text).toContain('Point of Sale')

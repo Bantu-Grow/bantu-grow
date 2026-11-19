@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 
 // Mock Next.js Link
 vi.mock('next/link', () => ({
@@ -26,7 +26,7 @@ describe('CatalogPage', () => {
     const jsx = await CatalogPage()
     render(jsx)
     const h1 = screen.getByRole('heading', { level: 1 })
-    expect(h1).toHaveTextContent(/produk kami/i)
+    expect(h1).toHaveTextContent(/pilih solusi digital/i)
   })
 
   it('renders product cards when products exist', async () => {
@@ -61,4 +61,49 @@ describe('CatalogPage', () => {
       screen.getByText(/belum ada produk yang tersedia/i)
     ).toBeInTheDocument()
   })
+
+  it('searches case-insensitively and preserves the query in category links', async () => {
+    render(await CatalogPage({ searchParams: Promise.resolve({ q: 'UMROH' }) }))
+    expect(screen.getAllByRole('article')).toHaveLength(1)
+    expect(within(screen.getByRole('article')).getByRole('heading', { level: 3 })).toHaveTextContent('Management Travel Umroh')
+    expect(screen.getByRole('searchbox', { name: 'Cari produk' })).toHaveValue('UMROH')
+    const filterUrl = new URL(screen.getByRole('link', { name: 'Ritel & UMKM' }).getAttribute('href')!, 'https://example.test')
+    expect(filterUrl.searchParams.get('q')).toBe('UMROH')
+    expect(filterUrl.searchParams.get('niche')).toBe('Ritel & UMKM')
+  })
+
+  it('combines the niche and search query while preserving the niche in the search form', async () => {
+    const { container } = render(await CatalogPage({ searchParams: Promise.resolve({ niche: 'Travel & Pariwisata Religi', q: 'jamaah' }) }))
+    expect(screen.getAllByRole('article')).toHaveLength(1)
+    expect(container.querySelector('form input[name="niche"]')).toHaveValue('Travel & Pariwisata Religi')
+    expect(screen.getByRole('link', { name: 'Travel & Pariwisata Religi' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('search')).toHaveAttribute('method', 'get')
+  })
+
+  it('offers a reset that clears both filters when nothing matches', async () => {
+    render(await CatalogPage({ searchParams: Promise.resolve({ niche: 'Ritel & UMKM', q: 'apotek' }) }))
+    expect(screen.queryByRole('article')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tidak ada produk yang ditemukan.' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Reset pencarian' })).toHaveAttribute('href', '/produk')
+  })
+
+  it('accepts repeated URL parameters and trims the first search value', async () => {
+    render(await CatalogPage({ searchParams: Promise.resolve({ q: ['  QRIS  ', 'unused'] }) }))
+    expect(screen.getAllByRole('article')).toHaveLength(1)
+    expect(screen.getByRole('searchbox', { name: 'Cari produk' })).toHaveValue('QRIS')
+    expect(within(screen.getByRole('article')).getByRole('heading', { level: 3 })).toHaveTextContent('Point of Sale')
+  })
+
+  it('renders new catalog products and features from the data source', async () => {
+    vi.mocked(catalog.getAllProducts).mockResolvedValueOnce([{
+      slug: 'layanan-baru', name: 'Layanan Baru', niche: 'Kategori Baru',
+      shortDescription: 'Deskripsi dari katalog.', fullDescription: 'Deskripsi lengkap.',
+      features: ['Fitur dari katalog'],
+    }])
+    render(await CatalogPage())
+    expect(screen.getByText('Deskripsi dari katalog.')).toBeInTheDocument()
+    expect(screen.getByText('Fitur dari katalog')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Lihat detail Layanan Baru' })).toHaveAttribute('href', '/produk/layanan-baru')
+  })
+
 })
