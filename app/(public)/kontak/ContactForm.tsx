@@ -4,8 +4,14 @@ import { useActionState, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field'
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+} from '@/components/ui/field'
 import { submitLead, type SubmitLeadResult } from '@/app/actions/submit-lead'
+import { StatusMessage } from '@/components/public-page'
 import { copy } from '@/content/copy'
 import type { Product } from '@/content/products'
 import type { ContactInput } from '@/lib/contact-validation'
@@ -35,9 +41,27 @@ async function submitAction(
   return submitLead(input, honeypot)
 }
 
-export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Props) {
-  const [state, formAction, isPending] = useActionState(submitAction, initialState)
-  const [showForm, setShowForm] = useState(true)
+export function ContactForm(props: Props) {
+  const [attempt, setAttempt] = useState(0)
+  return (
+    <ContactFormBody
+      key={attempt}
+      {...props}
+      onReset={() => setAttempt((value) => value + 1)}
+    />
+  )
+}
+
+function ContactFormBody({
+  products,
+  preSelectedSlug,
+  preFilledMessage,
+  onReset,
+}: Props & { onReset: () => void }) {
+  const [state, formAction, isPending] = useActionState(
+    submitAction,
+    initialState
+  )
 
   const retained =
     state?.status === 'validation_error'
@@ -46,58 +70,70 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         ? state.values
         : null
 
-  const errors =
-    state?.status === 'validation_error' ? state.result.errors : []
+  const errors = state?.status === 'validation_error' ? state.result.errors : []
 
   const getError = (field: 'name' | 'email' | 'message') =>
     errors.find((e) => e.field === field)
 
-  if (state?.status === 'success' && showForm) {
+  if (state?.status === 'success') {
     return (
-      <div
-        role="status"
-        aria-live="polite"
-        className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-8 text-center"
-      >
-        <CheckCircle className="mx-auto h-12 w-12 text-emerald-500 mb-4 animate-bounce motion-reduce:animate-none" />
-        <h2 className="text-xl font-bold text-foreground mb-2">Pesan Terkirim!</h2>
-        <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">{copy.contactSuccessMessage}</p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setShowForm(false)}
-          className="inline-flex items-center gap-2"
+      <div role="status" aria-live="polite">
+        <StatusMessage
+          title="Pesan terkirim"
+          icon={CheckCircle}
+          action={
+            <Button
+              type="button"
+              variant="outline"
+              size="pill-sm"
+              onClick={onReset}
+            >
+              <RotateCcw className="size-4" aria-hidden="true" />
+              Kirim Pesan Lagi
+            </Button>
+          }
         >
-          <RotateCcw className="size-4" aria-hidden="true" />
-          Kirim Pesan Lagi
-        </Button>
+          {copy.contactSuccessMessage}
+        </StatusMessage>
       </div>
     )
   }
 
-  // If user clicked "Kirim Pesan Lagi", reset and show form
-  // We use a key trick: when showForm goes to false, we render the form fresh
-
   return (
-    <form action={formAction} className="w-full flex flex-col gap-6" noValidate key={showForm ? 'active' : 'reset'}>
+    <form
+      action={formAction}
+      className="w-full flex flex-col gap-6"
+      noValidate
+      aria-busy={isPending}
+    >
       {/* Honeypot field - hidden from real users, bots will fill this */}
       <div className="absolute -left-[9999px]" aria-hidden="true">
         <label htmlFor="company_url">Company URL</label>
-        <input type="text" id="company_url" name="company_url" tabIndex={-1} autoComplete="off" />
+        <input
+          type="text"
+          id="company_url"
+          name="company_url"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       {state?.status === 'server_error' && (
-        <div role="alert" className="rounded-lg bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive flex items-start gap-3">
+        <div
+          role="alert"
+          className="rounded-lg bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive flex items-start gap-3"
+        >
           <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
           <span>{state.message}</span>
         </div>
       )}
 
-      <FieldGroup>
+      <FieldGroup className="grid gap-6 sm:grid-cols-2">
         {/* Name */}
         <Field data-invalid={!!getError('name')}>
           <FieldLabel htmlFor="name">{copy.contactNameLabel}</FieldLabel>
           <Input
+            variant="public"
             id="name"
             name="name"
             type="text"
@@ -118,6 +154,7 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         <Field data-invalid={!!getError('email')}>
           <FieldLabel htmlFor="email">{copy.contactEmailLabel2}</FieldLabel>
           <Input
+            variant="public"
             id="email"
             name="email"
             type="email"
@@ -140,6 +177,7 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         <Field>
           <FieldLabel htmlFor="phone">Nomor WhatsApp (Opsional)</FieldLabel>
           <Input
+            variant="public"
             id="phone"
             name="phone"
             type="tel"
@@ -151,8 +189,11 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
 
         {/* Company Name (optional) */}
         <Field>
-          <FieldLabel htmlFor="companyName">Nama Perusahaan (Opsional)</FieldLabel>
+          <FieldLabel htmlFor="companyName">
+            Nama Perusahaan (Opsional)
+          </FieldLabel>
           <Input
+            variant="public"
             id="companyName"
             name="companyName"
             type="text"
@@ -163,13 +204,15 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         </Field>
 
         {/* Product subject (optional) */}
-        <Field>
-          <FieldLabel htmlFor="productSlug">{copy.contactProductLabel}</FieldLabel>
+        <Field className="sm:col-span-2">
+          <FieldLabel htmlFor="productSlug">
+            {copy.contactProductLabel}
+          </FieldLabel>
           <select
             id="productSlug"
             name="productSlug"
             defaultValue={retained?.productSlug ?? preSelectedSlug ?? ''}
-            className="flex h-8 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm shadow-xs transition-all outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 font-medium text-foreground/80 dark:bg-card"
+            className="h-12 w-full rounded-xl border bg-background px-4 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:text-sm"
             aria-label={copy.contactProductLabel}
           >
             <option value="">{copy.contactProductPlaceholder}</option>
@@ -182,9 +225,10 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         </Field>
 
         {/* Message */}
-        <Field data-invalid={!!getError('message')}>
+        <Field className="sm:col-span-2" data-invalid={!!getError('message')}>
           <FieldLabel htmlFor="message">{copy.contactMessageLabel}</FieldLabel>
           <Textarea
+            className="min-h-36 rounded-xl px-4 py-3"
             id="message"
             name="message"
             placeholder={copy.contactMessagePlaceholder}
@@ -201,7 +245,13 @@ export function ContactForm({ products, preSelectedSlug, preFilledMessage }: Pro
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isPending} className="w-full mt-2 font-bold">
+      <Button
+        type="submit"
+        variant="brand"
+        size="pill-sm"
+        disabled={isPending}
+        className="mt-2 w-full"
+      >
         {isPending ? 'Mengirim...' : copy.contactSubmitButton}
       </Button>
     </form>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { DemoForm } from './DemoForm'
-import { DecorIcon } from '@/components/decor-icon'
+import { PageContainer, PublicHero } from '@/components/public-page'
 import { demoMetadata } from '@/lib/seo'
 import { getAllProducts } from '@/lib/catalog'
 import { CheckCircle } from 'lucide-react'
@@ -21,54 +21,57 @@ export default async function DemoPage() {
   const productOptions = products.map((p) => ({ slug: p.slug, name: p.name }))
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 md:px-8 py-12 md:py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3 md:text-4xl">
-          Minta Demo Gratis
-        </h1>
-        <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-          Jadwalkan demo produk BantuGrow dan lihat langsung bagaimana solusi kami dapat membantu bisnis Anda berkembang.
-        </p>
-      </div>
-
-      <div className="relative border-y border-border/80 py-12">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-          {/* Benefits sidebar */}
-          <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-xl font-bold text-foreground">
-              Apa yang Anda Dapatkan
-            </h2>
-            <ul className="space-y-4">
-              {benefits.map((benefit, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-muted-foreground">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="rounded-lg bg-muted/30 border border-border/60 p-4">
-              <p className="text-xs text-muted-foreground">
-                Tim kami akan menghubungi Anda dalam 1x24 jam setelah pengajuan demo diterima.
-              </p>
-            </div>
+    <>
+      <PublicHero
+        eyebrow="Demo Produk"
+        title="Lihat produknya langsung."
+        accent="Temukan yang cocok untuk usaha."
+        description="Jadwalkan demo bersama tim BantuGrow. Kenali cara kerja produk dan diskusikan kebutuhan operasional usaha Anda."
+      />
+      <PageContainer className="grid items-start gap-10 py-12 lg:grid-cols-5 lg:gap-16 lg:py-20">
+        <section
+          className="space-y-6 lg:col-span-2"
+          aria-labelledby="demo-benefits-heading"
+        >
+          <h2
+            id="demo-benefits-heading"
+            className="text-balance text-3xl font-medium lg:text-4xl"
+          >
+            Apa yang Anda dapatkan
+          </h2>
+          <ul className="space-y-5">
+            {benefits.map((benefit) => (
+              <li key={benefit} className="flex gap-3">
+                <CheckCircle
+                  className="mt-1 size-5 shrink-0 text-primary"
+                  aria-hidden="true"
+                />
+                <span className="text-base leading-8 text-muted-foreground">
+                  {benefit}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="space-y-2 rounded-2xl bg-secondary p-6">
+            <h3 className="font-sans text-sm font-semibold">
+              Setelah Anda mengirim
+            </h3>
+            <p className="text-base leading-8 text-muted-foreground">
+              Tim kami akan menghubungi Anda dalam 1×24 jam setelah pengajuan
+              demo diterima.
+            </p>
           </div>
-
-          {/* Demo Form */}
-          <div className="lg:col-span-3">
-            <div className="rounded-xl border border-border/80 bg-card p-6 md:p-8 shadow-sm">
-              <h3 className="text-lg font-bold text-foreground mb-6">
-                Isi Formulir Demo
-              </h3>
-              <DemoForm products={productOptions} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </section>
+        <section
+          className="min-w-0 space-y-6 rounded-3xl border p-6 sm:p-10 lg:col-span-3"
+          aria-labelledby="demo-form-heading"
+        >
+          <h2 id="demo-form-heading" className="text-3xl font-medium">
+            Jadwalkan demo Anda
+          </h2>
+          <DemoForm products={productOptions} />
+        </section>
+      </PageContainer>
+    </>
   )
 }
