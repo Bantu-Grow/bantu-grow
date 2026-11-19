@@ -1,7 +1,8 @@
+import { PageContainer, PublicHero } from '@/components/public-page'
+import { CallToAction } from '@/components/cta'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { DecorIcon } from '@/components/decor-icon'
 import { caseStudiesMetadata } from '@/lib/seo'
 import { caseStudies } from '@/content/case-studies'
 
@@ -9,46 +10,49 @@ export const metadata: Metadata = caseStudiesMetadata()
 
 export default function CaseStudiesPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 md:px-8 py-12 md:py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3 md:text-4xl">
-          Studi Kasus
-        </h1>
-        <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-          Pelajari bagaimana UMKM Indonesia berhasil bertumbuh bersama BantuGrow.
-        </p>
-      </div>
-
-      <div className="relative border-y border-border/80 py-12">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
+      <PublicHero
+        eyebrow="Studi Kasus"
+        title="Dari tantangan harian."
+        accent="Menuju usaha yang lebih tertata."
+        description="Pelajari bagaimana pelanggan BantuGrow menggunakan teknologi untuk merapikan operasional, dari toko ritel hingga komunitas."
+      />
+      <PageContainer className="py-12 lg:py-20">
+        <h2 className="mb-10 text-balance text-3xl font-medium lg:text-4xl">
+          Cerita di balik perubahan
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {caseStudies.map((study) => (
             <Link
               key={study.slug}
               href={`/studi-kasus/${study.slug}`}
-              className="group flex flex-col rounded-lg border border-border/80 p-6 bg-card hover:shadow-md hover:border-primary/30 transition-all"
+              className="group flex min-w-0 flex-col overflow-hidden rounded-3xl border outline-none hover:border-primary/50 focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-                {study.niche}
-              </span>
-              <h2 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                {study.title}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-grow line-clamp-3">
-                {study.challenge}
-              </p>
-              <div className="flex items-center gap-1 text-sm font-medium text-primary">
-                Baca Selengkapnya
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              <div className="flex flex-col gap-4 bg-secondary p-6 lg:p-8">
+                <p className="text-sm font-semibold text-primary">
+                  {study.niche}
+                </p>
+                <h3 className="text-balance text-3xl leading-snug font-medium">
+                  {study.title}
+                </h3>
+              </div>
+              <div className="flex flex-1 flex-col gap-6 p-6 lg:p-8">
+                <p className="text-pretty text-base leading-8 text-muted-foreground">
+                  {study.challenge}
+                </p>
+                <span className="mt-auto flex items-center justify-between gap-3 pt-4 text-sm font-semibold">
+                  Baca Selengkapnya{' '}
+                  <ArrowRight
+                    className="size-5 text-primary"
+                    aria-hidden="true"
+                  />
+                </span>
               </div>
             </Link>
           ))}
         </div>
-      </div>
-    </div>
+      </PageContainer>
+      <CallToAction variant="catalog" />
+    </>
   )
 }
