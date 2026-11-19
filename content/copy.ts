@@ -92,7 +92,7 @@ export const copy = {
   navContact: 'Kontak',
 
   // WhatsApp
-  whatsappNumber: '6281234567890',
+  whatsappNumber: '6285624585576',
   whatsappCta: 'Chat via WhatsApp',
 
   // Blog
