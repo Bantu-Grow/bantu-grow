@@ -107,7 +107,7 @@ export default function TermsPage() {
       <h2 id="section-11">11. Hubungi Kami</h2>
       <p>
         Untuk pertanyaan mengenai syarat dan ketentuan ini, hubungi kami di{' '}
-        <a href="mailto:halo@bantugrow.id">halo@bantugrow.id</a>.
+        <a href="mailto:halo@bantugrow.com">halo@bantugrow.com</a>.
       </p>
     </LegalDocument>
   )

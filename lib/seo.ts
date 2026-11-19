@@ -15,7 +15,7 @@ const SITE_NAME = 'BantuGrow'
  * Previously the root layout used a different variable (NEXT_PUBLIC_APP_URL),
  * which produced inconsistent canonical/OG URLs.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bantugrow.id'
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bantugrow.com'
 
 function buildMetadata(title: string, description: string): Metadata {
   return {

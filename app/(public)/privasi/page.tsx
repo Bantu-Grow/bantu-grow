@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
       <h2 id="section-8">8. Hubungi Kami</h2>
       <p>
         Jika Anda memiliki pertanyaan tentang kebijakan privasi ini, silakan
-        hubungi kami di <a href="mailto:halo@bantugrow.id">halo@bantugrow.id</a>
+        hubungi kami di <a href="mailto:halo@bantugrow.com">halo@bantugrow.com</a>
         .
       </p>
     </LegalDocument>

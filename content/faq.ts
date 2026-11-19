@@ -37,7 +37,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Bagaimana cara menghubungi tim support BantuGrow?',
     answer:
-      'Anda dapat menghubungi kami melalui email di halo@bantugrow.id, chat WhatsApp, atau melalui formulir kontak di website kami. Tim support kami tersedia 24/7 untuk membantu Anda.',
+      'Anda dapat menghubungi kami melalui email di halo@bantugrow.com, chat WhatsApp, atau melalui formulir kontak di website kami. Tim support kami tersedia 24/7 untuk membantu Anda.',
   },
   {
     question: 'Apakah saya bisa mengintegrasikan BantuGrow dengan sistem lain?',

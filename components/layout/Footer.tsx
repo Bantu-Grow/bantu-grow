@@ -1,6 +1,5 @@
 import { GithubIcon } from '@/components/icons/github-icon'
 import { InstagramIcon } from '@/components/icons/instagram-icon'
-import { XIcon } from '@/components/icons/x-icon'
 import { Logo } from '@/components/logo'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { copy } from '@/content/copy'
@@ -14,7 +13,6 @@ import { Mail } from 'lucide-react'
 
 const socialIconMap: Record<SocialLink['platform'], React.ReactNode> = {
   instagram: <InstagramIcon className="size-5" aria-hidden="true" />,
-  x: <XIcon className="size-5" aria-hidden="true" />,
   github: <GithubIcon className="size-5" aria-hidden="true" />,
 }
 

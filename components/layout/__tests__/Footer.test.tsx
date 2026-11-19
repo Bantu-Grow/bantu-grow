@@ -29,9 +29,9 @@ describe('Footer', () => {
 
   it('renders the company contact email', () => {
     render(<Footer />)
-    const emailLink = screen.getByRole('link', { name: /halo@bantugrow\.id/i })
+    const emailLink = screen.getByRole('link', { name: /halo@bantugrow\.com/i })
     expect(emailLink).toBeInTheDocument()
-    expect(emailLink).toHaveAttribute('href', 'mailto:halo@bantugrow.id')
+    expect(emailLink).toHaveAttribute('href', 'mailto:halo@bantugrow.com')
   })
 
   it('renders footer rights text', () => {

@@ -22,7 +22,7 @@ export const defaultLeadSink: LeadSink = {
     await insertLead(lead)
 
     // TODO: Send email notification to admin when an email provider is configured
-    // Example: await sendEmail({ to: 'admin@bantugrow.id', subject: `New lead: ${lead.name}`, body: ... })
+    // Example: await sendEmail({ to: 'halo@bantugrow.com', subject: `New lead: ${lead.name}`, body: ... })
 
     // TODO: Send auto-reply email to the lead when an email provider is configured
     // Example: await sendEmail({ to: lead.email, subject: 'Terima kasih telah menghubungi BantuGrow', body: ... })

@@ -24,10 +24,10 @@ describe('renderMarkdown sanitization', () => {
   })
 
   it('preserves legitimate markdown output', () => {
-    const html = renderMarkdown('## Judul\n\n- satu\n- dua\n\n[link](https://bantugrow.id)')
+    const html = renderMarkdown('## Judul\n\n- satu\n- dua\n\n[link](https://bantugrow.com)')
     expect(html).toContain('<h2>Judul</h2>')
     expect(html).toContain('<li>satu</li>')
-    expect(html).toContain('href="https://bantugrow.id"')
+    expect(html).toContain('href="https://bantugrow.com"')
   })
 
   it('sanitizes legacy string[] content too', () => {

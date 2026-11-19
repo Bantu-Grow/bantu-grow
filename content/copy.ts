@@ -2,7 +2,7 @@ export const copy = {
   // Company
   companyName: 'BantuGrow',
   companyTagline: 'Solusi SaaS untuk UMKM Indonesia',
-  contactEmail: 'halo@bantugrow.id',
+  contactEmail: 'halo@bantugrow.com',
 
   // Hero section (Home page)
   heroHeadline: 'Kurangi kerja manual. Fokus tumbuhkan usaha.',

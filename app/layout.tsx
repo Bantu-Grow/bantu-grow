@@ -41,7 +41,7 @@ export default function RootLayout({
           To activate: uncomment the script below and set data-domain to your actual domain.
           Sign up at https://plausible.io and add your domain there.
         */}
-        {/* <script defer data-domain="bantugrow.id" src="https://plausible.io/js/script.js"></script> */}
+        {/* <script defer data-domain="bantugrow.com" src="https://plausible.io/js/script.js"></script> */}
       </head>
       <body className="min-h-full flex flex-col">
         {children}
