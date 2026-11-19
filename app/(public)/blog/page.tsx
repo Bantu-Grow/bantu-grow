@@ -1,7 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Search } from 'lucide-react'
+import { Search, ArrowRight } from 'lucide-react'
+import { BlogCard } from '@/components/blogs-section'
+import {
+  PageContainer,
+  PublicHero,
+  StatusMessage,
+} from '@/components/public-page'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { CallToAction } from '@/components/cta'
 import { getAllBlogs } from '@/lib/blog'
 import { blogListMetadata } from '@/lib/seo'
@@ -16,11 +24,13 @@ interface PageProps {
   searchParams?: Promise<{ category?: string; page?: string; q?: string }>
 }
 
-export default async function BlogArchivePage({ searchParams }: PageProps = {}) {
+export default async function BlogArchivePage({
+  searchParams,
+}: PageProps = {}) {
   const params = searchParams ? await searchParams : {}
   const selectedCategory = params.category || ''
   const searchQuery = params.q || ''
-  const currentPage = Math.max(1, parseInt(params.page || '1', 10))
+  const currentPage = Math.max(1, parseInt(params.page || '1', 10) || 1)
 
   const allPosts = await getAllBlogs()
 
@@ -45,15 +55,26 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
   }
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / POSTS_PER_PAGE))
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
+  )
   const safePage = Math.min(currentPage, totalPages)
   const startIndex = (safePage - 1) * POSTS_PER_PAGE
-  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE)
+  const paginatedPosts = filteredPosts.slice(
+    startIndex,
+    startIndex + POSTS_PER_PAGE
+  )
 
   // Build URL helper
-  function buildUrl(overrides: { category?: string; page?: string; q?: string }) {
+  function buildUrl(overrides: {
+    category?: string
+    page?: string
+    q?: string
+  }) {
     const p = new URLSearchParams()
-    const cat = overrides.category !== undefined ? overrides.category : selectedCategory
+    const cat =
+      overrides.category !== undefined ? overrides.category : selectedCategory
     const pg = overrides.page !== undefined ? overrides.page : String(safePage)
     const query = overrides.q !== undefined ? overrides.q : searchQuery
     if (cat) p.set('category', cat)
@@ -64,159 +85,162 @@ export default async function BlogArchivePage({ searchParams }: PageProps = {}) 
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 md:px-8 py-12 md:py-16 flex flex-col gap-12">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="font-semibold text-2xl tracking-wide md:text-4xl">
-          {copy.blogHeadline}
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          {copy.blogDescription}
-        </p>
-      </div>
-
-      {/* Search */}
-      <form action="/blog" method="get" role="search" className="flex gap-2">
-        {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
-        <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
+    <>
+      <PublicHero
+        eyebrow="Blog BantuGrow"
+        title="Ide praktis hari ini."
+        accent="Langkah maju untuk usaha Anda."
+        description={copy.blogDescription}
+      >
+        <form
+          action="/blog"
+          method="get"
+          role="search"
+          className="mt-8 flex w-full max-w-3xl items-center gap-2 rounded-full border bg-background p-2 pl-4 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 sm:gap-4 sm:pl-6"
+        >
+          {selectedCategory && (
+            <input type="hidden" name="category" value={selectedCategory} />
+          )}
+          <Search
+            className="size-5 shrink-0 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            key={searchQuery}
             type="search"
             name="q"
             id="blog-search"
             defaultValue={searchQuery}
-            placeholder="Cari artikel..."
             aria-label="Cari artikel"
-            className="block w-full rounded-lg border border-input bg-transparent py-2.5 pl-10 pr-4 text-sm placeholder-muted-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary text-foreground"
+            placeholder="Cari artikel atau topik..."
+            className="h-12 flex-1 rounded-full border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
           />
-        </div>
-        <button
-          type="submit"
-          className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-        >
-          Cari
-        </button>
-      </form>
-
-      {/* Category filter */}
-      <div className="flex flex-wrap gap-2">
-        <Link
-          href={buildUrl({ category: '', page: '1' })}
-          className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-            !selectedCategory
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-          }`}
-        >
-          Semua
-        </Link>
-        {categories.map((cat) => (
-          <Link
-            key={cat}
-            href={buildUrl({ category: cat, page: '1' })}
-            className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-              selectedCategory === cat
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-            }`}
+          <Button
+            type="submit"
+            variant="brand"
+            size="pill-sm"
+            className="px-4 sm:px-6"
           >
-            {cat}
-          </Link>
-        ))}
-      </div>
-
-      {/* Blog posts grid */}
-      {paginatedPosts.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">
-          <p>Tidak ada artikel yang ditemukan.</p>
+            Cari artikel{' '}
+            <ArrowRight className="hidden size-4 sm:block" aria-hidden="true" />
+          </Button>
+        </form>
+      </PublicHero>
+      <PageContainer className="py-12 lg:py-20">
+        <div className="mb-10 space-y-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <h2 className="min-w-0 text-balance text-3xl leading-tight font-medium break-words lg:text-4xl">
+              {searchQuery
+                ? `Hasil pencarian “${searchQuery}”`
+                : 'Baca sesuai kebutuhan Anda'}
+            </h2>
+            <p role="status" className="shrink-0 text-sm text-muted-foreground">
+              {filteredPosts.length} artikel{' '}
+              {searchQuery || selectedCategory ? 'ditemukan' : 'tersedia'}
+            </p>
+          </div>
+          <nav aria-label="Kategori artikel" className="flex flex-wrap gap-3">
+            {['', ...categories].map((category) => (
+              <Link
+                key={category}
+                href={buildUrl({ category, page: '1' })}
+                aria-current={
+                  selectedCategory === category ? 'page' : undefined
+                }
+                className={cn(
+                  'inline-flex min-h-11 items-center rounded-full border px-5 py-3 text-sm font-medium outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none',
+                  selectedCategory === category
+                    ? 'border-primary bg-primary text-foreground'
+                    : 'hover:border-primary'
+                )}
+              >
+                {category || 'Semua'}
+              </Link>
+            ))}
+          </nav>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {paginatedPosts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group flex flex-col border border-border/80 rounded-lg overflow-hidden hover:bg-muted/10 transition-colors"
-            >
-              {/* Cover image */}
-              {post.coverImage && (
-                <div className="aspect-video overflow-hidden border-b border-border/40">
-                  <Image
-                    src={post.coverImage}
-                    alt={post.title}
-                    width={400}
-                    height={200}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              )}
-              <div className="flex flex-col flex-grow p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                    {post.category}
-                  </span>
-                  <span className="text-muted-foreground text-xs">•</span>
-                  <span className="text-muted-foreground text-xs">{formatDate(post.date)}</span>
-                </div>
-                <h2 className="text-base font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                  {post.title}
-                </h2>
-                <p className="text-sm text-muted-foreground line-clamp-3 mb-4 flex-grow">
-                  {post.excerpt}
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-auto">
-                  <span>Oleh</span>
-                  <span className="font-medium text-foreground/80">{post.author}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <nav aria-label="Navigasi halaman" className="flex items-center justify-center gap-3">
-          {safePage > 1 ? (
-            <Link
-              href={buildUrl({ page: String(safePage - 1) })}
-              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-            >
-              Sebelumnya
-            </Link>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed"
-            >
-              Sebelumnya
-            </span>
-          )}
-          <span className="text-sm text-muted-foreground">
-            Halaman {safePage} dari {totalPages}
-          </span>
-          {safePage < totalPages ? (
-            <Link
-              href={buildUrl({ page: String(safePage + 1) })}
-              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-            >
-              Berikutnya
-            </Link>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex items-center rounded-lg border border-input px-4 py-2 text-sm font-medium text-muted-foreground opacity-50 cursor-not-allowed"
-            >
-              Berikutnya
-            </span>
-          )}
-        </nav>
-      )}
-
-      {/* CTA section */}
-      <section className="relative">
-        <CallToAction />
-      </section>
-    </div>
+        {paginatedPosts.length ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {paginatedPosts.map((post) => (
+              <BlogCard
+                key={post.slug}
+                variant="editorial"
+                headingLevel={3}
+                title={post.title}
+                date={formatDate(post.date)}
+                category={post.category}
+                author={post.author}
+                description={post.excerpt}
+                coverImage={post.coverImage}
+                href={`/blog/${post.slug}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <StatusMessage
+            title="Tidak ada artikel yang ditemukan"
+            icon={Search}
+            className="border-0 bg-secondary py-16"
+            action={
+              <Link
+                href="/blog"
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'pill-sm' })
+                )}
+              >
+                Reset pencarian
+              </Link>
+            }
+          >
+            Coba kata kunci lain atau hapus filter untuk melihat semua artikel.
+          </StatusMessage>
+        )}
+        {totalPages > 1 && (
+          <nav
+            aria-label="Navigasi halaman"
+            className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          >
+            {safePage > 1 ? (
+              <Link
+                href={buildUrl({ page: String(safePage - 1) })}
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'pill-sm' })
+                )}
+              >
+                Sebelumnya
+              </Link>
+            ) : (
+              <span
+                aria-disabled="true"
+                className="rounded-full border px-5 py-3 text-sm text-muted-foreground opacity-50"
+              >
+                Sebelumnya
+              </span>
+            )}
+            <p className="text-sm text-muted-foreground">
+              Halaman {safePage} dari {totalPages}
+            </p>
+            {safePage < totalPages ? (
+              <Link
+                href={buildUrl({ page: String(safePage + 1) })}
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'pill-sm' })
+                )}
+              >
+                Berikutnya
+              </Link>
+            ) : (
+              <span
+                aria-disabled="true"
+                className="rounded-full border px-5 py-3 text-sm text-muted-foreground opacity-50"
+              >
+                Berikutnya
+              </span>
+            )}
+          </nav>
+        )}
+      </PageContainer>
+      <CallToAction variant="catalog" />
+    </>
   )
 }

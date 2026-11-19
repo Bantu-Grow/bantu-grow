@@ -10,9 +10,11 @@ vi.mock('next/link', () => ({
 }))
 
 describe('Footer', () => {
-  it('renders company name', () => {
-    render(<Footer />)
-    expect(screen.getByText('BantuGrow')).toBeInTheDocument()
+  it('keeps only the glow logo at the bottom of the footer', () => {
+    const { container } = render(<Footer />)
+    expect(container.querySelectorAll('img')).toHaveLength(1)
+    expect(screen.queryByRole('link', { name: /^bantugrow$/i })).not.toBeInTheDocument()
+    expect(screen.getByText('Bantu usaha Anda tumbuh, mulai dari yang paling dibutuhkan.')).toBeInTheDocument()
   })
 
   it('renders all four nav links', () => {
@@ -27,9 +29,9 @@ describe('Footer', () => {
 
   it('renders the company contact email', () => {
     render(<Footer />)
-    const emailLink = screen.getByRole('link', { name: /halo@bantugrow\.id/i })
+    const emailLink = screen.getByRole('link', { name: /halo@bantugrow\.com/i })
     expect(emailLink).toBeInTheDocument()
-    expect(emailLink).toHaveAttribute('href', 'mailto:halo@bantugrow.id')
+    expect(emailLink).toHaveAttribute('href', 'mailto:halo@bantugrow.com')
   })
 
   it('renders footer rights text', () => {

@@ -52,7 +52,7 @@ The dev server is declared in `.amp/services.yaml`, with `/blog` as its readines
 
 | Variabel | Wajib | Default | Keterangan |
 |---|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | tidak | `https://bantugrow.id` | URL kanonik untuk metadata, sitemap, dan robots |
+| `NEXT_PUBLIC_SITE_URL` | tidak | `https://www.bantugrow.com` | URL kanonik untuk metadata, sitemap, dan robots |
 | `DATABASE_PATH` | tidak | `content/data/bantugrow.db` | Lokasi file SQLite (`:memory:` dipakai saat test) |
 | `ADMIN_PASSWORD` | ya di produksi | `admin` (non-produksi saja) | Password panel admin |
 
@@ -60,7 +60,7 @@ The dev server is declared in `.amp/services.yaml`, with `/blog` as its readines
 
 ```
 app/
-  (public)/   Halaman publik: beranda, produk, harga, blog, studi kasus, demo, kontak, dll.
+  (public)/   Halaman publik: beranda, produk, blog, studi kasus, demo, kontak, dll.
   admin/      Login dan dashboard admin
   actions/    Server Actions (lead, demo, newsletter, admin)
 components/   Komponen UI dan layout

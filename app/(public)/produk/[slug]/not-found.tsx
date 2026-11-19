@@ -1,33 +1,31 @@
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import { PageContainer } from '@/components/public-page'
+import { cn } from '@/lib/utils'
 import { copy } from '@/content/copy'
 import { ArrowRightIcon, PackageX } from 'lucide-react'
 
 export default function ProductNotFound() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 md:px-8 py-20 text-center">
-      {/* Illustration */}
-      <div className="mx-auto mb-8 flex items-center justify-center">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl" />
-          <div className="relative flex size-24 items-center justify-center rounded-full border border-border/60 bg-muted/30">
-            <PackageX className="size-10 text-muted-foreground/60" aria-hidden="true" />
-          </div>
+    <div className="bg-secondary">
+      <PageContainer className="flex flex-col items-center gap-6 py-20 text-center lg:py-24">
+        <div className="flex size-24 items-center justify-center rounded-full border bg-background">
+          <PackageX className="size-10 text-primary" aria-hidden="true" />
         </div>
-      </div>
-
-      <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-4 md:text-4xl">
-        {copy.notFoundHeadline}
-      </h1>
-      <p className="text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
-        {copy.notFoundProductMessage}
-      </p>
-      {/* Styled as a button but kept a real link, so it stays announced as a
-          link and does not trigger the Base UI nativeButton warning. */}
-      <Link href="/produk" className={buttonVariants()}>
-        {copy.notFoundCatalogLink}
-        <ArrowRightIcon className="ml-1.5 h-4 w-4 shrink-0" data-icon="inline-end" />
-      </Link>
+        <h1 className="text-balance text-4xl leading-tight font-medium lg:text-5xl">
+          {copy.notFoundHeadline}
+        </h1>
+        <p className="text-base leading-8 text-muted-foreground">
+          {copy.notFoundProductMessage}
+        </p>
+        <Link
+          href="/produk"
+          className={cn(buttonVariants({ variant: 'brand', size: 'pill-sm' }))}
+        >
+          {copy.notFoundCatalogLink}
+          <ArrowRightIcon className="size-4" aria-hidden="true" />
+        </Link>
+      </PageContainer>
     </div>
   )
 }

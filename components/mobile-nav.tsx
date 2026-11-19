@@ -1,66 +1,37 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Portal, PortalBackdrop } from "@/components/portal";
-import { navLinks } from "@/components/layout/Header";
-import { XIcon, MenuIcon } from "lucide-react";
-import Link from 'next/link';
+'use client'
+
+import { useState } from 'react'
+import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Sheet, SheetTrigger, SheetContent, SheetTitle, SheetClose } from '@/components/ui/sheet'
+import { navLinks } from '@/components/layout/Header'
+import { cn } from '@/lib/utils'
 
 export function MobileNav() {
-	const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false)
 
-	return (
-		<div className="md:hidden">
-			<Button
-				aria-controls="mobile-menu"
-				aria-expanded={open}
-				aria-label={open ? 'Tutup menu' : 'Buka menu'}
-				className="md:hidden"
-				onClick={() => setOpen(!open)}
-				size="icon"
-				variant="outline"
-			>
-				{open ? (
-					<XIcon className="size-4.5" />
-				) : (
-					<MenuIcon className="size-4.5" />
-				)}
-			</Button>
-			{open && (
-				<Portal className="top-16" id="mobile-menu">
-					<PortalBackdrop />
-					<nav
-						aria-label="Navigasi mobile"
-						className={cn(
-							"data-[slot=open]:zoom-in-97 ease-out data-[slot=open]:animate-in",
-							"size-full p-4 bg-background"
-						)}
-						data-slot={open ? "open" : "closed"}
-					>
-						<div className="grid gap-y-2">
-							{navLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									className={cn(buttonVariants({ variant: "ghost" }), "justify-start text-base w-full py-2 px-3")}
-									onClick={() => setOpen(false)}
-								>
-									{link.label}
-								</Link>
-							))}
-						</div>
-						<div className="mt-12 flex flex-col gap-2">
-							<Link
-								href="/demo"
-								className={cn(buttonVariants({ variant: "default" }), "w-full text-center py-2 px-3 block")}
-								onClick={() => setOpen(false)}
-							>
-								Minta Demo
-							</Link>
-						</div>
-					</nav>
-				</Portal>
-			)}
-		</div>
-	);
+  return (
+    <div className="lg:hidden">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger render={<Button variant="outline" className="size-11 rounded-full" aria-label="Buka menu" />}>
+          <Menu className="size-5" aria-hidden="true" />
+        </SheetTrigger>
+        <SheetContent showCloseButton={false} className="w-full gap-6 overflow-y-auto p-6 motion-reduce:transition-none">
+          <div className="flex items-center justify-between gap-4">
+            <SheetTitle>Navigasi BantuGrow</SheetTitle>
+            <SheetClose render={<Button variant="ghost" className="size-11 rounded-full" aria-label="Tutup menu" />}>
+              <X className="size-5" aria-hidden="true" />
+            </SheetClose>
+          </div>
+          <nav aria-label="Navigasi mobile" className="grid gap-2">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className={cn(buttonVariants({ variant: 'ghost' }), 'min-h-12 justify-start px-4 text-base')} onClick={() => setOpen(false)}>{link.label}</Link>
+            ))}
+            <Link href="/demo" className={cn(buttonVariants({ variant: 'brand', size: 'pill' }), 'mt-6')} onClick={() => setOpen(false)}>Minta Demo Gratis</Link>
+          </nav>
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
 }

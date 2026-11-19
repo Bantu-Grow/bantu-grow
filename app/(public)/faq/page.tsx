@@ -1,8 +1,8 @@
+import { PageContainer, PublicHero } from '@/components/public-page'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { DecorIcon } from '@/components/decor-icon'
 import { faqMetadata } from '@/lib/seo'
 import { faqItems } from '@/content/faq'
 
@@ -10,54 +10,66 @@ export const metadata: Metadata = faqMetadata()
 
 export default function FaqPage() {
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 md:px-8 py-12 md:py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3 md:text-4xl">
-          Pertanyaan yang Sering Diajukan
-        </h1>
-        <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-          Temukan jawaban untuk pertanyaan umum seputar BantuGrow dan layanan kami.
-        </p>
-      </div>
-
-      <div className="relative border-y border-border/80 py-8">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-
-        <div className="divide-y divide-border/60">
+    <>
+      <PublicHero
+        eyebrow="Pusat Bantuan"
+        title="Cari jawabannya di sini."
+        accent="Mulai dengan lebih yakin."
+        description="Temukan jawaban untuk pertanyaan umum seputar produk dan layanan BantuGrow."
+      />
+      <PageContainer className="py-12 lg:py-20">
+        <section
+          aria-label="Pertanyaan yang Sering Diajukan"
+          className="mx-auto max-w-4xl"
+        >
           {faqItems.map((item, index) => (
             <details
-              key={index}
-              className="group py-4 first:pt-0 last:pb-0"
+              key={item.question}
+              open={index === 0}
+              className="group border-b py-7"
             >
-              <summary className="flex cursor-pointer items-center justify-between gap-4 text-left font-semibold text-foreground text-sm md:text-base hover:text-primary transition-colors list-none [&::-webkit-details-marker]:hidden">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-5 rounded-sm text-left font-sans text-lg leading-8 font-semibold outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                 <span>{item.question}</span>
-                <span className="shrink-0 text-muted-foreground group-open:rotate-45 transition-transform duration-200 text-lg">
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 text-xl text-primary group-open:hidden"
+                >
                   +
                 </span>
+                <span
+                  aria-hidden="true"
+                  className="hidden shrink-0 text-xl text-primary group-open:block"
+                >
+                  −
+                </span>
               </summary>
-              <p className="mt-3 text-muted-foreground text-sm leading-relaxed pr-8">
+              <p className="mt-4 max-w-3xl pr-8 text-pretty text-base leading-8 text-muted-foreground">
                 {item.answer}
               </p>
             </details>
           ))}
-        </div>
-      </div>
-
-      <div className="mt-12 text-center">
-        <p className="text-muted-foreground text-sm mb-4">
-          Tidak menemukan jawaban yang Anda cari?
-        </p>
-        <Button
-          render={<Link href="/kontak" />}
-          nativeButton={false}
-        >
-          Hubungi Kami
-          <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-        </Button>
-      </div>
-    </div>
+        </section>
+      </PageContainer>
+      <PageContainer className="pb-12 lg:pb-20">
+        <section className="flex flex-col gap-6 rounded-3xl bg-secondary p-7 sm:p-10 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-3">
+            <h2 className="text-balance text-3xl font-medium">
+              Belum menemukan jawaban?
+            </h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              Ceritakan pertanyaan Anda kepada tim BantuGrow.
+            </p>
+          </div>
+          <Button
+            variant="brand"
+            size="pill-sm"
+            render={<Link href="/kontak" />}
+            nativeButton={false}
+          >
+            Hubungi Kami <ArrowRight className="size-4" aria-hidden="true" />
+          </Button>
+        </section>
+      </PageContainer>
+    </>
   )
 }

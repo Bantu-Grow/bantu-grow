@@ -1,8 +1,8 @@
+import { PageContainer, PublicHero } from '@/components/public-page'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, CheckCircle, Quote } from 'lucide-react'
-import { DecorIcon } from '@/components/decor-icon'
+import { ArrowLeft, CheckCircle } from 'lucide-react'
 import { caseStudyMetadata } from '@/lib/seo'
 import { caseStudies } from '@/content/case-studies'
 
@@ -10,7 +10,9 @@ interface CaseStudyPageProps {
   params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params
   const study = caseStudies.find((s) => s.slug === slug)
   if (!study) return {}
@@ -21,7 +23,9 @@ export function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }))
 }
 
-export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps) {
+export default async function CaseStudyDetailPage({
+  params,
+}: CaseStudyPageProps) {
   const { slug } = await params
   const study = caseStudies.find((s) => s.slug === slug)
 
@@ -30,68 +34,74 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 md:px-8 py-12 md:py-16">
-      <Link
-        href="/studi-kasus"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-      >
-        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Kembali ke Studi Kasus
-      </Link>
-
-      <div className="relative border-y border-border/80 py-12">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-
-        <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-          {study.niche}
-        </span>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground mt-2 mb-3">
-          {study.title}
-        </h1>
-        <p className="text-muted-foreground text-sm mb-10">
-          Klien: <span className="font-medium text-foreground">{study.client}</span>
-        </p>
-
-        {/* Challenge */}
-        <section className="mb-8">
-          <h2 className="text-lg font-bold text-foreground mb-3">Tantangan</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">{study.challenge}</p>
-        </section>
-
-        {/* Solution */}
-        <section className="mb-8">
-          <h2 className="text-lg font-bold text-foreground mb-3">Solusi</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">{study.solution}</p>
-        </section>
-
-        {/* Results */}
-        <section className="mb-8">
-          <h2 className="text-lg font-bold text-foreground mb-3">Hasil</h2>
-          <ul className="space-y-3">
-            {study.results.map((result, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-sm text-muted-foreground">{result}</span>
+    <article>
+      <PublicHero
+        title={study.title}
+        eyebrow={study.niche}
+        glow={false}
+        description={<>Klien: {study.client}</>}
+        beforeTitle={
+          <Link
+            href="/studi-kasus"
+            className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            Kembali ke Studi Kasus
+          </Link>
+        }
+      />
+      <PageContainer className="grid gap-10 py-12 md:grid-cols-2 lg:gap-16 lg:py-20">
+        {[
+          { title: 'Tantangan', text: study.challenge },
+          { title: 'Solusi', text: study.solution },
+        ].map((section) => (
+          <section key={section.title}>
+            <h2 className="mb-5 text-3xl font-medium lg:text-4xl">
+              {section.title}
+            </h2>
+            <p className="text-pretty text-base leading-8 text-muted-foreground">
+              {section.text}
+            </p>
+          </section>
+        ))}
+      </PageContainer>
+      <section className="bg-secondary" aria-labelledby="story-results-heading">
+        <PageContainer className="py-12 lg:py-20">
+          <h2
+            id="story-results-heading"
+            className="mb-10 text-3xl font-medium lg:text-4xl"
+          >
+            Hasil di {study.client}
+          </h2>
+          <ul className="grid gap-6 md:grid-cols-2">
+            {study.results.map((result) => (
+              <li
+                key={result}
+                className="flex items-start gap-4 rounded-2xl bg-background p-6 lg:p-8"
+              >
+                <CheckCircle
+                  className="mt-1 size-6 shrink-0 text-primary"
+                  aria-hidden="true"
+                />
+                <span className="text-xl leading-8 font-medium">{result}</span>
               </li>
             ))}
           </ul>
-        </section>
-
-        {/* Testimonial */}
-        <section className="mt-10 p-6 bg-primary/5 rounded-lg border border-primary/10">
-          <Quote className="h-6 w-6 text-primary/40 mb-3" aria-hidden="true" />
-          <blockquote className="text-sm text-foreground italic leading-relaxed mb-4">
-            &ldquo;{study.testimonial.quote}&rdquo;
+        </PageContainer>
+      </section>
+      <PageContainer className="py-12 lg:py-20">
+        <figure className="mx-auto max-w-4xl space-y-7">
+          <blockquote className="font-heading text-pretty text-2xl leading-relaxed font-medium lg:text-3xl">
+            “{study.testimonial.quote}”
           </blockquote>
-          <div>
-            <p className="text-sm font-semibold text-foreground">{study.testimonial.name}</p>
-            <p className="text-xs text-muted-foreground">{study.testimonial.role}</p>
-          </div>
-        </section>
-      </div>
-    </div>
+          <figcaption className="space-y-2">
+            <p className="text-base font-semibold">{study.testimonial.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {study.testimonial.role}
+            </p>
+          </figcaption>
+        </figure>
+      </PageContainer>
+    </article>
   )
 }

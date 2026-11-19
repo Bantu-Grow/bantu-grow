@@ -10,14 +10,7 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-// Mock useTheme and ThemeProvider
-vi.mock('@/components/theme-provider', () => ({
-  useTheme: () => ({
-    theme: 'light',
-    setTheme: vi.fn(),
-  }),
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
-}))
+
 
 describe('ProductNotFound', () => {
   it('renders the not-found headline', () => {

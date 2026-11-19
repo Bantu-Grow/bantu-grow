@@ -5,7 +5,11 @@ import { parseContactSubject, parsePricingPackage } from '@/lib/contact-link'
 import { pricingTiers } from '@/content/pricing'
 import { copy } from '@/content/copy'
 import { ContactForm } from './ContactForm'
-import { DecorIcon } from '@/components/decor-icon'
+import Link from 'next/link'
+import { Mail, MessageCircle } from 'lucide-react'
+import { PageContainer, PublicHero } from '@/components/public-page'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = contactMetadata()
 
@@ -28,28 +32,85 @@ export default async function ContactPage({ searchParams }: PageProps) {
   const packageName = parsePricingPackage(urlParams, pricingTiers)
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 md:px-8 py-12 md:py-16">
-      <div className="relative border-y border-border/80 py-12 px-6 md:px-8 bg-card rounded-lg shadow-sm">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3 md:text-4xl">
-          {copy.contactHeadline}
-        </h1>
-        <p className="text-muted-foreground mb-8 text-sm md:text-base leading-relaxed">
-          {copy.contactDescription}
-        </p>
-
-        <ContactForm
-          products={products}
-          preSelectedSlug={preSelected?.slug}
-          preFilledMessage={
-            packageName ? `Halo, saya tertarik dengan paket ${packageName}.` : undefined
-          }
-        />
-      </div>
-    </div>
+    <>
+      <PublicHero
+        eyebrow="Kontak BantuGrow"
+        title="Ceritakan kebutuhan Anda."
+        accent="Kita cari langkah berikutnya."
+        description="Ingin merapikan usaha atau bertanya tentang produk? Sampaikan kebutuhan Anda, lalu tim BantuGrow akan membantu menentukan solusi yang relevan."
+      />
+      <PageContainer className="grid items-start gap-10 py-12 lg:grid-cols-5 lg:gap-16 lg:py-20">
+        <section
+          className="space-y-8 lg:col-span-2"
+          aria-labelledby="contact-channels-heading"
+        >
+          <h2
+            id="contact-channels-heading"
+            className="text-balance text-3xl font-medium lg:text-4xl"
+          >
+            Mulai dari percakapan
+          </h2>
+          <p className="text-pretty text-base leading-8 text-muted-foreground">
+            Pilih kanal yang nyaman untuk Anda. Untuk pertanyaan produk,
+            sertakan kebutuhan usaha agar tim kami bisa membantu dengan lebih
+            tepat.
+          </p>
+          <a
+            href={`mailto:${copy.contactEmail}`}
+            className="flex flex-col gap-3 rounded-2xl bg-secondary p-6 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Mail className="size-6 text-primary" aria-hidden="true" />
+            <span className="text-sm font-semibold">Email kami</span>
+            <span className="text-xl font-medium break-all">
+              {copy.contactEmail}
+            </span>
+          </a>
+          <a
+            href={`https://wa.me/${copy.whatsappNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col gap-3 rounded-2xl border p-6 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <MessageCircle className="size-6 text-primary" aria-hidden="true" />
+            <span className="text-xl font-medium">Chat via WhatsApp</span>
+            <span className="text-base leading-8 text-muted-foreground">
+              Diskusikan kebutuhan usaha langsung dengan tim kami.
+            </span>
+          </a>
+          <p className="text-base leading-8 text-muted-foreground">
+            Ingin melihat produknya lebih dulu?
+          </p>
+          <Link
+            href="/demo"
+            className={cn(
+              buttonVariants({ variant: 'outline', size: 'pill-sm' }),
+              'w-full'
+            )}
+          >
+            Minta Demo Gratis
+          </Link>
+        </section>
+        <section
+          className="min-w-0 space-y-6 rounded-3xl border p-6 sm:p-10 lg:col-span-3"
+          aria-labelledby="contact-form-heading"
+        >
+          <h2
+            id="contact-form-heading"
+            className="text-balance text-3xl font-medium"
+          >
+            Kirim pesan kepada kami
+          </h2>
+          <ContactForm
+            products={products}
+            preSelectedSlug={preSelected?.slug}
+            preFilledMessage={
+              packageName
+                ? `Halo, saya tertarik dengan paket ${packageName}.`
+                : undefined
+            }
+          />
+        </section>
+      </PageContainer>
+    </>
   )
 }

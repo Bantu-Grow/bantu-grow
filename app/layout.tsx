@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Outfit, Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
 import { SITE_URL } from '@/lib/seo'
 
 const outfit = Outfit({
@@ -35,7 +34,6 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${outfit.variable} ${jakarta.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
     >
       <head>
         {/*
@@ -43,24 +41,10 @@ export default function RootLayout({
           To activate: uncomment the script below and set data-domain to your actual domain.
           Sign up at https://plausible.io and add your domain there.
         */}
-        {/* <script defer data-domain="bantugrow.id" src="https://plausible.io/js/script.js"></script> */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const savedTheme = localStorage.getItem('color-scheme');
-                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
+        {/* <script defer data-domain="bantugrow.com" src="https://plausible.io/js/script.js"></script> */}
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </body>
     </html>
   )

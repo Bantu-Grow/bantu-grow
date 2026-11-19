@@ -15,7 +15,7 @@ const SITE_NAME = 'BantuGrow'
  * Previously the root layout used a different variable (NEXT_PUBLIC_APP_URL),
  * which produced inconsistent canonical/OG URLs.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bantugrow.id'
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bantugrow.com'
 
 function buildMetadata(title: string, description: string): Metadata {
   return {
@@ -124,12 +124,6 @@ export function blogPostMeta(post: BlogPost): PageMeta {
 export function blogPostMetadata(post: BlogPost): Metadata {
   const meta = blogPostMeta(post)
   return buildMetadata(meta.title, meta.description)
-}
-
-export function pricingMeta(): Metadata {
-  const title = `Harga & Paket — ${SITE_NAME}`
-  const description = 'Pilih paket BantuGrow yang sesuai dengan skala bisnis UMKM Anda. Mulai gratis, tanpa biaya tersembunyi.'
-  return buildMetadata(title, description)
 }
 
 export function privacyMetadata(): Metadata {

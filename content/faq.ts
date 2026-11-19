@@ -17,7 +17,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Berapa biaya berlangganan BantuGrow?',
     answer:
-      'BantuGrow menawarkan paket mulai dari gratis (Starter) hingga paket berbayar yang disesuaikan dengan skala bisnis Anda. Tidak ada biaya tersembunyi. Anda bisa melihat detail lengkap di halaman Harga kami.',
+      'BantuGrow menawarkan paket mulai dari gratis (Starter) hingga paket berbayar yang disesuaikan dengan skala bisnis Anda. Tidak ada biaya tersembunyi. Hubungi tim BantuGrow melalui halaman Kontak untuk informasi paket yang sesuai kebutuhan Anda.',
   },
   {
     question: 'Apakah data bisnis saya aman di BantuGrow?',
@@ -37,7 +37,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Bagaimana cara menghubungi tim support BantuGrow?',
     answer:
-      'Anda dapat menghubungi kami melalui email di halo@bantugrow.id, chat WhatsApp, atau melalui formulir kontak di website kami. Tim support kami tersedia 24/7 untuk membantu Anda.',
+      'Anda dapat menghubungi kami melalui email di halo@bantugrow.com, chat WhatsApp, atau melalui formulir kontak di website kami. Tim support kami tersedia 24/7 untuk membantu Anda.',
   },
   {
     question: 'Apakah saya bisa mengintegrasikan BantuGrow dengan sistem lain?',

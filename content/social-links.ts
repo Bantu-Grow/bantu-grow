@@ -1,5 +1,5 @@
 export interface SocialLink {
-  platform: 'instagram' | 'x' | 'github'
+  platform: 'instagram' | 'github'
   url: string
   label: string
 }
@@ -12,17 +12,12 @@ export interface SocialLink {
 export const socialLinks: SocialLink[] = [
   {
     platform: 'instagram',
-    url: '', // Set your Instagram URL here, e.g. 'https://instagram.com/bantugrow'
+    url: 'https://www.instagram.com/bantugrow/',
     label: 'Instagram',
   },
   {
-    platform: 'x',
-    url: '', // Set your X/Twitter URL here, e.g. 'https://x.com/bantugrow'
-    label: 'X (Twitter)',
-  },
-  {
     platform: 'github',
-    url: '', // Set your GitHub URL here, e.g. 'https://github.com/bantugrow'
+    url: 'https://github.com/Bantu-Grow',
     label: 'GitHub',
   },
 ]
