@@ -10,9 +10,11 @@ vi.mock('next/link', () => ({
 }))
 
 describe('Footer', () => {
-  it('renders company name', () => {
-    render(<Footer />)
-    expect(screen.getByText('BantuGrow')).toBeInTheDocument()
+  it('keeps only the glow logo at the bottom of the footer', () => {
+    const { container } = render(<Footer />)
+    expect(container.querySelectorAll('img')).toHaveLength(1)
+    expect(screen.queryByRole('link', { name: /^bantugrow$/i })).not.toBeInTheDocument()
+    expect(screen.getByText('Bantu usaha Anda tumbuh, mulai dari yang paling dibutuhkan.')).toBeInTheDocument()
   })
 
   it('renders all four nav links', () => {

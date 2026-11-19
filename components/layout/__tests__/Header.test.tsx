@@ -9,16 +9,6 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-// Mock useTheme
-vi.mock('@/components/theme-provider', () => ({
-  useTheme: () => ({
-    theme: 'light',
-    setTheme: vi.fn(),
-  }),
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
-}))
-
-
 describe('Header', () => {
   it('renders the company name as a link to home', () => {
     render(<Header />)

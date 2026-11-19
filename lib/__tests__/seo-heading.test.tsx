@@ -22,14 +22,7 @@ vi.mock('@/app/actions/submit-lead', () => ({
   submitLead: vi.fn().mockResolvedValue({ status: 'success' }),
 }))
 
-// Mock useTheme and ThemeProvider
-vi.mock('@/components/theme-provider', () => ({
-  useTheme: () => ({
-    theme: 'light',
-    setTheme: vi.fn(),
-  }),
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
-}))
+
 
 // Mock catalog for static pages
 vi.mock('@/lib/catalog', async (importOriginal) => {
